@@ -10,138 +10,147 @@ const GL_ONE_MINUS_SRC_COLOR = 0x0301;
 const GL_ONE_MINUS_SRC_ALPHA = 0x0303;
 const GL_DST_COLOR = 0x0306;
 
+let _globalDrawCalls = 0;
+const _blendModesGL: { srcRgbPma: number; dstRgb: number; srcAlpha: number }[] = [
+  { srcRgbPma: GL_ONE, dstRgb: GL_ONE_MINUS_SRC_ALPHA, srcAlpha: GL_ONE },
+  { srcRgbPma: GL_ONE, dstRgb: GL_ONE, srcAlpha: GL_ONE },
+  { srcRgbPma: GL_DST_COLOR, dstRgb: GL_ONE_MINUS_SRC_ALPHA, srcAlpha: GL_ONE },
+  { srcRgbPma: GL_ONE, dstRgb: GL_ONE_MINUS_SRC_COLOR, srcAlpha: GL_ONE },
+];
+
 export class PolygonBatcher implements Disposable {
-	public static disableCulling = false;
+  public static disableCulling = false;
 
-	private context: ManagedWebGLRenderingContext;
-	private drawCalls = 0;
-	private static globalDrawCalls = 0;
-	isDrawing = false;
-	private mesh: Mesh;
-	private shader: Shader | null = null;
-	private lastTexture: GLTexture | null = null;
-	private verticesLength = 0;
-	private indicesLength = 0;
-	private srcColorBlend: number;
-	private srcAlphaBlend: number;
-	private dstBlend: number;
-	private cullWasEnabled = false;
+  private context: ManagedWebGLRenderingContext;
+  private drawCalls = 0;
+  isDrawing = false;
+  private mesh: Mesh;
+  private shader: Shader | null = null;
+  private lastTexture: GLTexture | null = null;
+  private verticesLength = 0;
+  private indicesLength = 0;
+  private srcColorBlend: number;
+  private srcAlphaBlend: number;
+  private dstBlend: number;
+  private cullWasEnabled = false;
 
-	constructor (context: ManagedWebGLRenderingContext | WebGLRenderingContext, twoColorTint: boolean = true, maxVertices: number = 10920) {
-		if (maxVertices > 10920) throw new Error(`Can't have more than 10920 triangles per batch: ${maxVertices}`);
-		this.context = context instanceof ManagedWebGLRenderingContext ? context : new ManagedWebGLRenderingContext(context);
-		const attributes = twoColorTint ?
-			[new Position2Attribute(), new ColorAttribute(), new TexCoordAttribute(), new Color2Attribute()] :
-			[new Position2Attribute(), new ColorAttribute(), new TexCoordAttribute()];
-		this.mesh = new Mesh(context, attributes, maxVertices, maxVertices * 3);
-		const gl = this.context.gl;
-		this.srcColorBlend = gl.SRC_ALPHA;
-		this.srcAlphaBlend = gl.ONE;
-		this.dstBlend = gl.ONE_MINUS_SRC_ALPHA;
-	}
+  constructor(
+    context: ManagedWebGLRenderingContext | WebGLRenderingContext,
+    twoColorTint: boolean = true,
+    maxVertices: number = 10920,
+  ) {
+    if (maxVertices > 10920) throw new Error(`Can't have more than 10920 triangles per batch: ${maxVertices}`);
+    this.context =
+      context instanceof ManagedWebGLRenderingContext ? context : new ManagedWebGLRenderingContext(context);
+    const attributes = twoColorTint
+      ? [new Position2Attribute(), new ColorAttribute(), new TexCoordAttribute(), new Color2Attribute()]
+      : [new Position2Attribute(), new ColorAttribute(), new TexCoordAttribute()];
+    this.mesh = new Mesh(context, attributes, maxVertices, maxVertices * 3);
+    const gl = this.context.gl;
+    this.srcColorBlend = gl.SRC_ALPHA;
+    this.srcAlphaBlend = gl.ONE;
+    this.dstBlend = gl.ONE_MINUS_SRC_ALPHA;
+  }
 
-	begin (shader: Shader) {
-		if (this.isDrawing) throw new Error("PolygonBatch is already drawing. Call PolygonBatch.end() before calling PolygonBatch.begin()");
-		this.drawCalls = 0;
-		this.shader = shader;
-		this.lastTexture = null;
-		this.isDrawing = true;
+  begin(shader: Shader) {
+    if (this.isDrawing)
+      throw new Error("PolygonBatch is already drawing. Call PolygonBatch.end() before calling PolygonBatch.begin()");
+    this.drawCalls = 0;
+    this.shader = shader;
+    this.lastTexture = null;
+    this.isDrawing = true;
 
-		const gl = this.context.gl;
-		gl.enable(gl.BLEND);
-		gl.blendFuncSeparate(this.srcColorBlend, this.dstBlend, this.srcAlphaBlend, this.dstBlend);
+    const gl = this.context.gl;
+    gl.enable(gl.BLEND);
+    gl.blendFuncSeparate(this.srcColorBlend, this.dstBlend, this.srcAlphaBlend, this.dstBlend);
 
-		if (PolygonBatcher.disableCulling) {
-			this.cullWasEnabled = gl.isEnabled(gl.CULL_FACE);
-			if (this.cullWasEnabled) gl.disable(gl.CULL_FACE);
-		}
-	}
+    if (PolygonBatcher.disableCulling) {
+      this.cullWasEnabled = gl.isEnabled(gl.CULL_FACE);
+      if (this.cullWasEnabled) gl.disable(gl.CULL_FACE);
+    }
+  }
 
-	private static blendModesGL: { srcRgbPma: number, dstRgb: number, srcAlpha: number }[] = [
-		{ srcRgbPma: GL_ONE, dstRgb: GL_ONE_MINUS_SRC_ALPHA, srcAlpha: GL_ONE },
-		{ srcRgbPma: GL_ONE, dstRgb: GL_ONE, srcAlpha: GL_ONE },
-		{ srcRgbPma: GL_DST_COLOR, dstRgb: GL_ONE_MINUS_SRC_ALPHA, srcAlpha: GL_ONE },
-		{ srcRgbPma: GL_ONE, dstRgb: GL_ONE_MINUS_SRC_COLOR, srcAlpha: GL_ONE }
-	]
+  setBlendMode(blendMode: BlendMode) {
+    const blendModeGL = _blendModesGL[blendMode];
+    const srcColorBlend = blendModeGL.srcRgbPma;
+    const srcAlphaBlend = blendModeGL.srcAlpha;
+    const dstBlend = blendModeGL.dstRgb;
 
-	setBlendMode (blendMode: BlendMode) {
-		const blendModeGL = PolygonBatcher.blendModesGL[blendMode];
-		const srcColorBlend = blendModeGL.srcRgbPma;
-		const srcAlphaBlend = blendModeGL.srcAlpha;
-		const dstBlend = blendModeGL.dstRgb;
+    if (this.srcColorBlend === srcColorBlend && this.srcAlphaBlend === srcAlphaBlend && this.dstBlend === dstBlend)
+      return;
+    this.srcColorBlend = srcColorBlend;
+    this.srcAlphaBlend = srcAlphaBlend;
+    this.dstBlend = dstBlend;
+    if (this.isDrawing) {
+      this.flush();
+    }
+    const gl = this.context.gl;
+    gl.blendFuncSeparate(srcColorBlend, dstBlend, srcAlphaBlend, dstBlend);
+  }
 
-		if (this.srcColorBlend === srcColorBlend && this.srcAlphaBlend === srcAlphaBlend && this.dstBlend === dstBlend) return;
-		this.srcColorBlend = srcColorBlend;
-		this.srcAlphaBlend = srcAlphaBlend;
-		this.dstBlend = dstBlend;
-		if (this.isDrawing) {
-			this.flush();
-		}
-		const gl = this.context.gl;
-		gl.blendFuncSeparate(srcColorBlend, dstBlend, srcAlphaBlend, dstBlend);
-	}
+  draw(texture: GLTexture, vertices: ArrayLike<number>, indices: Array<number>) {
+    if (texture !== this.lastTexture) {
+      this.flush();
+      this.lastTexture = texture;
+    } else if (
+      this.verticesLength + vertices.length > this.mesh.getVertices().length ||
+      this.indicesLength + indices.length > this.mesh.getIndices().length
+    ) {
+      this.flush();
+    }
 
-	draw (texture: GLTexture, vertices: ArrayLike<number>, indices: Array<number>) {
-		if (texture !== this.lastTexture) {
-			this.flush();
-			this.lastTexture = texture;
-		} else if (this.verticesLength + vertices.length > this.mesh.getVertices().length ||
-			this.indicesLength + indices.length > this.mesh.getIndices().length) {
-			this.flush();
-		}
+    const indexStart = this.mesh.numVertices();
+    this.mesh.getVertices().set(vertices, this.verticesLength);
+    this.verticesLength += vertices.length;
+    this.mesh.setVerticesLength(this.verticesLength);
 
-		const indexStart = this.mesh.numVertices();
-		this.mesh.getVertices().set(vertices, this.verticesLength);
-		this.verticesLength += vertices.length;
-		this.mesh.setVerticesLength(this.verticesLength)
+    const indicesArray = this.mesh.getIndices();
+    for (let i = this.indicesLength, j = 0; j < indices.length; i++, j++) indicesArray[i] = indices[j] + indexStart;
+    this.indicesLength += indices.length;
+    this.mesh.setIndicesLength(this.indicesLength);
+  }
 
-		const indicesArray = this.mesh.getIndices();
-		for (let i = this.indicesLength, j = 0; j < indices.length; i++, j++)
-			indicesArray[i] = indices[j] + indexStart;
-		this.indicesLength += indices.length;
-		this.mesh.setIndicesLength(this.indicesLength);
-	}
+  flush() {
+    if (this.verticesLength === 0) return;
+    if (!this.lastTexture) throw new Error("No texture set.");
+    if (!this.shader) throw new Error("No shader set.");
+    this.lastTexture.bind();
+    this.mesh.draw(this.shader, this.context.gl.TRIANGLES);
 
-	flush () {
-		if (this.verticesLength === 0) return;
-		if (!this.lastTexture) throw new Error("No texture set.");
-		if (!this.shader) throw new Error("No shader set.");
-		this.lastTexture.bind();
-		this.mesh.draw(this.shader, this.context.gl.TRIANGLES);
+    this.verticesLength = 0;
+    this.indicesLength = 0;
+    this.mesh.setVerticesLength(0);
+    this.mesh.setIndicesLength(0);
+    this.drawCalls++;
+    _globalDrawCalls++;
+  }
 
-		this.verticesLength = 0;
-		this.indicesLength = 0;
-		this.mesh.setVerticesLength(0);
-		this.mesh.setIndicesLength(0);
-		this.drawCalls++;
-		PolygonBatcher.globalDrawCalls++;
-	}
+  end() {
+    if (!this.isDrawing)
+      throw new Error("PolygonBatch is not drawing. Call PolygonBatch.begin() before calling PolygonBatch.end()");
+    if (this.verticesLength > 0 || this.indicesLength > 0) this.flush();
+    this.shader = null;
+    this.lastTexture = null;
+    this.isDrawing = false;
 
-	end () {
-		if (!this.isDrawing) throw new Error("PolygonBatch is not drawing. Call PolygonBatch.begin() before calling PolygonBatch.end()");
-		if (this.verticesLength > 0 || this.indicesLength > 0) this.flush();
-		this.shader = null;
-		this.lastTexture = null;
-		this.isDrawing = false;
+    const gl = this.context.gl;
+    gl.disable(gl.BLEND);
+    if (PolygonBatcher.disableCulling) {
+      if (this.cullWasEnabled) gl.enable(gl.CULL_FACE);
+    }
+  }
 
-		const gl = this.context.gl;
-		gl.disable(gl.BLEND);
-		if (PolygonBatcher.disableCulling) {
-			if (this.cullWasEnabled) gl.enable(gl.CULL_FACE);
-		}
-	}
+  getDrawCalls() {
+    return this.drawCalls;
+  }
 
-	getDrawCalls () {
-		return this.drawCalls;
-	}
+  static getAndResetGlobalDrawCalls() {
+    const result = _globalDrawCalls;
+    _globalDrawCalls = 0;
+    return result;
+  }
 
-	static getAndResetGlobalDrawCalls () {
-		const result = PolygonBatcher.globalDrawCalls;
-		PolygonBatcher.globalDrawCalls = 0;
-		return result;
-	}
-
-	dispose () {
-		this.mesh.dispose();
-	}
+  dispose() {
+    this.mesh.dispose();
+  }
 }

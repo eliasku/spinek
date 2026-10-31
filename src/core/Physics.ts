@@ -1,5 +1,5 @@
 /** Determines how physics and other non-deterministic updates are applied. */
-export enum Physics {
+export const enum Physics {
   /** Physics are not updated or applied. */
   none,
 

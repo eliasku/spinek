@@ -16,7 +16,7 @@ export abstract class ConstraintData<
 }
 
 /** Determines how the {@link BonePose.scaleY} changes when {@link BonePose.scaleX} is set. */
-export enum ScaleYMode {
+export const enum ScaleYMode {
   /** scaleY is not changed. */
   None,
   /** scaleY is multiplied by the scaleX factor, preserving the bone's aspect ratio. */

@@ -129,7 +129,7 @@ export class Animation {
  * first key.
  *
  * See {@link Timeline.apply}. */
-export enum MixFrom {
+export const enum MixFrom {
   /** Alpha mixes from the current pose. Before the first key, no change is made. */
   current,
   /** Alpha mixes from the setup pose. Before the first key, the setup pose is used. */
@@ -138,7 +138,7 @@ export enum MixFrom {
   first,
 }
 
-export enum Property {
+export const enum Property {
   rotate,
   x,
   y,
@@ -2843,17 +2843,17 @@ export class PhysicsConstraintMixTimeline extends PhysicsConstraintTimeline {
   }
 }
 
+const _resetPropertyIds: string[] = [Property.physicsConstraintReset.toString()];
+
 /** Resets a physics constraint when specific animation times are reached. */
 export class PhysicsConstraintResetTimeline extends Timeline implements ConstraintTimeline {
-  private static propertyIds: string[] = [Property.physicsConstraintReset.toString()];
-
   /** The index of the physics constraint in {@link Skeleton.contraints} that will be reset when this timeline is
    * applied, or -1 if all physics constraints in the skeleton will be reset. */
   readonly constraintIndex: number;
 
   /** @param constraintIndex -1 for all physics constraints in the skeleton. */
   constructor(frameCount: number, constraintIndex: number) {
-    super(frameCount, ...PhysicsConstraintResetTimeline.propertyIds);
+    super(frameCount, ..._resetPropertyIds);
     this.constraintIndex = constraintIndex;
     this.instant = true;
   }

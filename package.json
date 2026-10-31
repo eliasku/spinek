@@ -16,18 +16,18 @@
   },
   "scripts": {
     "dev": "vp dev --host 127.0.0.1",
-    "build:examples": "vp build",
+    "build": "vp build",
     "preview": "vp preview --host 127.0.0.1",
     "typecheck": "tsc --noEmit",
     "test": "vp test run",
     "lint": "vp lint",
     "format": "vp fmt",
-    "check": "npm run typecheck && npm test && npm run build:examples"
+    "check": "npm run typecheck && npm test && npm run build"
   },
   "devDependencies": {
     "@types/node": "^26.0.0",
     "ek3d": "file:../ek3d",
-    "typescript": "^6.0.2",
+    "typescript": "^7.0.2",
     "vite": "npm:@voidzero-dev/vite-plus-core@1.4.0",
     "vite-plus": "1.4.0"
   },

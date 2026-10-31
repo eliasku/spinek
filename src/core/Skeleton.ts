@@ -14,6 +14,8 @@ import type { Skin } from "./Skin.js";
 import { Slot } from "./Slot.js";
 import { Color, type NumberArrayLike, Utils, Vector2 } from "./Utils.js";
 
+const _quadTriangles = [0, 1, 2, 2, 3, 0];
+
 /** Stores bones and slots to be posed by animations and application code. Multiple skeleton instances can share the same
  * {@link SkeletonData}, including animations, attachments, and skins.
  *
@@ -21,7 +23,6 @@ import { Color, type NumberArrayLike, Utils, Vector2 } from "./Utils.js";
  *
  * See [Instance objects](http://esotericsoftware.com/spine-runtime-architecture#Instance-objects) in the Spine Runtimes Guide. */
 export class Skeleton {
-  private static quadTriangles = [0, 1, 2, 2, 3, 0];
   static yDown = false;
   static get yDir(): number {
     return Skeleton.yDown ? -1 : 1;
@@ -438,7 +439,7 @@ export class Skeleton {
           verticesLength = 8;
           vertices = Utils.setArraySize(temp, verticesLength, 0);
           attachment.computeWorldVertices(slot, attachment.getOffsets(slot.appliedPose), vertices, 0, 2);
-          triangles = Skeleton.quadTriangles;
+          triangles = _quadTriangles;
         } else if (attachment instanceof MeshAttachment) {
           verticesLength = attachment.worldVerticesLength;
           vertices = Utils.setArraySize(temp, verticesLength, 0);

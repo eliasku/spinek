@@ -2,10 +2,10 @@ import type { Skeleton } from "../Skeleton.js";
 import type { Slot } from "../Slot.js";
 import { type NumberArrayLike, Utils } from "../Utils.js";
 
+const _empty: number[] = [];
+
 /** The base class for all attachments. Multiple {@link Skeleton} instances, slots, or skins can use the same attachments. */
 export abstract class Attachment {
-  private static readonly empty: number[] = [];
-
   name: string;
 
   /** Timelines for the timeline attachment are also applied to this attachment.
@@ -13,7 +13,7 @@ export abstract class Attachment {
   timelineAttachment?: Attachment;
 
   /** Slots that can have attachments whose {@link timelineAttachment} is this attachment. */
-  timelineSlots: number[] = Attachment.empty;
+  timelineSlots: number[] = _empty;
 
   constructor(name: string) {
     if (!name) throw new Error("name cannot be null.");
@@ -43,13 +43,13 @@ export abstract class Attachment {
   }
 }
 
+let _nextID = 0;
+
 /** Base class for an attachment with vertices that are transformed by one or more bones and can be deformed by
  * {@link SlotPose.deform}. */
 export abstract class VertexAttachment extends Attachment {
-  private static nextID = 0;
-
   /** The unique ID for this attachment. */
-  id = VertexAttachment.nextID++;
+  id = _nextID++;
 
   /** The bones that affect the {@link vertices}. The entries are, for each vertex, the number of bones affecting the vertex
    * followed by that many bone indices, which is {@link Skeleton.getBones} index. Null if this attachment has no weights. */

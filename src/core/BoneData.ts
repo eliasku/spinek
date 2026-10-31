@@ -47,7 +47,7 @@ export class BoneData extends PosedData<BonePose> {
 }
 
 /** Determines how a bone inherits world transforms from parent bones. */
-export enum Inherit {
+export const enum Inherit {
   Normal,
   OnlyTranslation,
   NoRotationOrReflection,

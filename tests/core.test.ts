@@ -6,11 +6,15 @@ import { AssetCache, AssetManagerBase } from "spinek/core/AssetManagerBase";
 import { AtlasAttachmentLoader } from "spinek/core/AtlasAttachmentLoader";
 import { MeshAttachment } from "spinek/core/attachments/MeshAttachment";
 import { RegionAttachment } from "spinek/core/attachments/RegionAttachment";
+import { Inherit } from "spinek/core/BoneData";
+import { ScaleYMode } from "spinek/core/ConstraintData";
+import { PositionMode, RotateMode, SpacingMode } from "spinek/core/PathConstraintData";
 import { Physics } from "spinek/core/Physics";
 import { Skeleton } from "spinek/core/Skeleton";
 import { SkeletonBinary } from "spinek/core/SkeletonBinary";
 import { SkeletonJson } from "spinek/core/SkeletonJson";
-import { FakeTexture } from "spinek/core/Texture";
+import { BlendMode } from "spinek/core/SlotData";
+import { FakeTexture, TextureFilter } from "spinek/core/Texture";
 import { TextureAtlas } from "spinek/core/TextureAtlas";
 import { Color, Vector2 } from "spinek/core/Utils";
 
@@ -46,6 +50,88 @@ it("releases prefixed assets only after the last cache reference", () => {
   manager.disposeAsset("image.png");
   expect(texture.disposals).toBe(1);
   expect(manager.get("image.png")).toBeUndefined();
+});
+
+it("parses non-default inheritance, blending, and constraint modes", () => {
+  const data = new SkeletonJson(loader()).readSkeletonData({
+    bones: [{ name: "root", inherit: "noScaleOrReflection" }],
+    slots: [{ name: "slot", bone: "root", blend: "Additive" }],
+    constraints: [
+      { type: "ik", name: "ik", bones: ["root"], target: "root", scaleY: "volume" },
+      {
+        type: "path",
+        name: "path",
+        bones: ["root"],
+        slot: "slot",
+        positionMode: "fixed",
+        spacingMode: "proportional",
+        rotateMode: "chainScale",
+      },
+      { type: "physics", name: "physics", bone: "root", scaleY: "Uniform" },
+    ],
+  });
+  expect(data.bones[0].setupPose.inherit).toBe(Inherit.NoScaleOrReflection);
+  expect(data.slots[0].blendMode).toBe(BlendMode.Additive);
+  expect(data.constraints).toMatchObject([
+    { scaleYMode: ScaleYMode.Volume },
+    { positionMode: PositionMode.Fixed, spacingMode: SpacingMode.Proportional, rotateMode: RotateMode.ChainScale },
+    { scaleYMode: ScaleYMode.Uniform },
+  ]);
+});
+
+it("preserves atlas mipmap aliases and lower-case initials", () => {
+  const atlas = new TextureAtlas("page.png\nsize: 1, 1\nfilter: mipMapLinearLinear, nearest\n");
+  expect([atlas.pages[0].minFilter, atlas.pages[0].magFilter]).toEqual([TextureFilter.MipMap, TextureFilter.Nearest]);
+});
+
+it.each([
+  ["hold", [0, 0, 0]],
+  ["once", [0, 1, 2]],
+  ["loop", [0, 1, 1]],
+  ["pingpong", [0, 1, 0]],
+  ["onceReverse", [2, 1, 0]],
+  ["loopReverse", [2, 1, 1]],
+  ["pingpongReverse", [2, 1, 2]],
+] as const)("plays JSON sequence mode %s", (mode, expected) => {
+  const atlas = new TextureAtlas(
+    "page.png\nsize: 3, 1\nframe0\nbounds: 0, 0, 1, 1\nframe1\nbounds: 1, 0, 1, 1\nframe2\nbounds: 2, 0, 1, 1\n",
+  );
+  const data = new SkeletonJson(new AtlasAttachmentLoader(atlas)).readSkeletonData({
+    bones: [{ name: "root" }],
+    slots: [{ name: "slot", bone: "root", attachment: "frame" }],
+    skins: [
+      {
+        name: "default",
+        attachments: { slot: { frame: { width: 1, height: 1, sequence: { count: 3, start: 0 } } } },
+      },
+    ],
+    animations: {
+      test: {
+        attachments: {
+          default: {
+            slot: {
+              frame: {
+                sequence: [
+                  { mode, delay: 1 },
+                  { time: 10, mode },
+                ],
+              },
+            },
+          },
+        },
+      },
+    },
+  });
+  const skeleton = new Skeleton(data);
+  const state = new AnimationState(new AnimationStateData(data));
+  state.setAnimation(0, "test", false);
+  const indices = [];
+  for (const delta of [0, 1, 3]) {
+    state.update(delta);
+    state.apply(skeleton);
+    indices.push(skeleton.slots[0].pose.sequenceIndex);
+  }
+  expect(indices).toEqual(expected);
 });
 
 describe.each(["json", "binary"] as const)("spineboy %s", (format) => {

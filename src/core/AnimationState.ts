@@ -1284,7 +1284,7 @@ export class EventQueue {
   }
 }
 
-export enum EventType {
+export const enum EventType {
   start,
   interrupt,
   end,

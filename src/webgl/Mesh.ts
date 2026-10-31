@@ -2,181 +2,210 @@ import { type Disposable, type Restorable } from "../core/Utils.js";
 import { Shader } from "./Shader.js";
 import { ManagedWebGLRenderingContext } from "./WebGL.js";
 
-
 export class Mesh implements Disposable, Restorable {
-	private context: ManagedWebGLRenderingContext;
-	private vertices: Float32Array;
-	private verticesBuffer: WebGLBuffer | null = null;
-	private verticesLength = 0;
-	private dirtyVertices = false;
-	private indices: Uint16Array;
-	private indicesBuffer: WebGLBuffer | null = null;
-	private indicesLength = 0;
-	private dirtyIndices = false;
-	private elementsPerVertex = 0;
+  private context: ManagedWebGLRenderingContext;
+  private vertices: Float32Array;
+  private verticesBuffer: WebGLBuffer | null = null;
+  private verticesLength = 0;
+  private dirtyVertices = false;
+  private indices: Uint16Array;
+  private indicesBuffer: WebGLBuffer | null = null;
+  private indicesLength = 0;
+  private dirtyIndices = false;
+  private elementsPerVertex = 0;
 
-	getAttributes (): VertexAttribute[] { return this.attributes; }
+  getAttributes(): VertexAttribute[] {
+    return this.attributes;
+  }
 
-	maxVertices (): number { return this.vertices.length / this.elementsPerVertex; }
-	numVertices (): number { return this.verticesLength / this.elementsPerVertex; }
-	setVerticesLength (length: number) {
-		this.dirtyVertices = true;
-		this.verticesLength = length;
-	}
-	getVertices (): Float32Array { return this.vertices; }
+  maxVertices(): number {
+    return this.vertices.length / this.elementsPerVertex;
+  }
+  numVertices(): number {
+    return this.verticesLength / this.elementsPerVertex;
+  }
+  setVerticesLength(length: number) {
+    this.dirtyVertices = true;
+    this.verticesLength = length;
+  }
+  getVertices(): Float32Array {
+    return this.vertices;
+  }
 
-	maxIndices (): number { return this.indices.length; }
-	numIndices (): number { return this.indicesLength; }
-	setIndicesLength (length: number) {
-		this.dirtyIndices = true;
-		this.indicesLength = length;
-	}
-	getIndices (): Uint16Array { return this.indices };
+  maxIndices(): number {
+    return this.indices.length;
+  }
+  numIndices(): number {
+    return this.indicesLength;
+  }
+  setIndicesLength(length: number) {
+    this.dirtyIndices = true;
+    this.indicesLength = length;
+  }
+  getIndices(): Uint16Array {
+    return this.indices;
+  }
 
-	getVertexSizeInFloats (): number {
-		let size = 0;
-		for (let i = 0; i < this.attributes.length; i++) {
-			const attribute = this.attributes[i];
-			size += attribute.numElements;
-		}
-		return size;
-	}
+  getVertexSizeInFloats(): number {
+    let size = 0;
+    for (let i = 0; i < this.attributes.length; i++) {
+      const attribute = this.attributes[i];
+      size += attribute.numElements;
+    }
+    return size;
+  }
 
-	constructor (context: ManagedWebGLRenderingContext | WebGLRenderingContext, private attributes: VertexAttribute[], maxVertices: number, maxIndices: number) {
-		this.context = context instanceof ManagedWebGLRenderingContext ? context : new ManagedWebGLRenderingContext(context);
-		this.elementsPerVertex = 0;
-		for (let i = 0; i < attributes.length; i++) {
-			this.elementsPerVertex += attributes[i].numElements;
-		}
-		this.vertices = new Float32Array(maxVertices * this.elementsPerVertex);
-		this.indices = new Uint16Array(maxIndices);
-		this.context.addRestorable(this);
-	}
+  constructor(
+    context: ManagedWebGLRenderingContext | WebGLRenderingContext,
+    private attributes: VertexAttribute[],
+    maxVertices: number,
+    maxIndices: number,
+  ) {
+    this.context =
+      context instanceof ManagedWebGLRenderingContext ? context : new ManagedWebGLRenderingContext(context);
+    this.elementsPerVertex = 0;
+    for (let i = 0; i < attributes.length; i++) {
+      this.elementsPerVertex += attributes[i].numElements;
+    }
+    this.vertices = new Float32Array(maxVertices * this.elementsPerVertex);
+    this.indices = new Uint16Array(maxIndices);
+    this.context.addRestorable(this);
+  }
 
-	setVertices (vertices: Array<number>) {
-		this.dirtyVertices = true;
-		if (vertices.length > this.vertices.length) throw Error(`Mesh can't store more than ${this.maxVertices()} vertices`);
-		this.vertices.set(vertices, 0);
-		this.verticesLength = vertices.length;
-	}
+  setVertices(vertices: Array<number>) {
+    this.dirtyVertices = true;
+    if (vertices.length > this.vertices.length)
+      throw Error(`Mesh can't store more than ${this.maxVertices()} vertices`);
+    this.vertices.set(vertices, 0);
+    this.verticesLength = vertices.length;
+  }
 
-	setIndices (indices: Array<number>) {
-		this.dirtyIndices = true;
-		if (indices.length > this.indices.length) throw Error(`Mesh can't store more than ${this.maxIndices()} indices`);
-		this.indices.set(indices, 0);
-		this.indicesLength = indices.length;
-	}
+  setIndices(indices: Array<number>) {
+    this.dirtyIndices = true;
+    if (indices.length > this.indices.length) throw Error(`Mesh can't store more than ${this.maxIndices()} indices`);
+    this.indices.set(indices, 0);
+    this.indicesLength = indices.length;
+  }
 
-	draw (shader: Shader, primitiveType: number) {
-		this.drawWithOffset(shader, primitiveType, 0, this.indicesLength > 0 ? this.indicesLength : this.verticesLength / this.elementsPerVertex);
-	}
+  draw(shader: Shader, primitiveType: number) {
+    this.drawWithOffset(
+      shader,
+      primitiveType,
+      0,
+      this.indicesLength > 0 ? this.indicesLength : this.verticesLength / this.elementsPerVertex,
+    );
+  }
 
-	drawWithOffset (shader: Shader, primitiveType: number, offset: number, count: number) {
-		const gl = this.context.gl;
-		if (this.dirtyVertices || this.dirtyIndices) this.update();
-		this.bind(shader);
-		if (this.indicesLength > 0) {
-			gl.drawElements(primitiveType, count, gl.UNSIGNED_SHORT, offset * 2);
-		} else {
-			gl.drawArrays(primitiveType, offset, count);
-		}
-		this.unbind(shader);
-	}
+  drawWithOffset(shader: Shader, primitiveType: number, offset: number, count: number) {
+    const gl = this.context.gl;
+    if (this.dirtyVertices || this.dirtyIndices) this.update();
+    this.bind(shader);
+    if (this.indicesLength > 0) {
+      gl.drawElements(primitiveType, count, gl.UNSIGNED_SHORT, offset * 2);
+    } else {
+      gl.drawArrays(primitiveType, offset, count);
+    }
+    this.unbind(shader);
+  }
 
-	bind (shader: Shader) {
-		const gl = this.context.gl;
-		gl.bindBuffer(gl.ARRAY_BUFFER, this.verticesBuffer);
-		let offset = 0;
-		for (let i = 0; i < this.attributes.length; i++) {
-			const attrib = this.attributes[i];
-			const location = shader.getAttributeLocation(attrib.name);
-			gl.enableVertexAttribArray(location);
-			gl.vertexAttribPointer(location, attrib.numElements, gl.FLOAT, false, this.elementsPerVertex * 4, offset * 4);
-			offset += attrib.numElements;
-		}
-		if (this.indicesLength > 0) gl.bindBuffer(gl.ELEMENT_ARRAY_BUFFER, this.indicesBuffer);
-	}
+  bind(shader: Shader) {
+    const gl = this.context.gl;
+    gl.bindBuffer(gl.ARRAY_BUFFER, this.verticesBuffer);
+    let offset = 0;
+    for (let i = 0; i < this.attributes.length; i++) {
+      const attrib = this.attributes[i];
+      const location = shader.getAttributeLocation(attrib.name);
+      gl.enableVertexAttribArray(location);
+      gl.vertexAttribPointer(location, attrib.numElements, gl.FLOAT, false, this.elementsPerVertex * 4, offset * 4);
+      offset += attrib.numElements;
+    }
+    if (this.indicesLength > 0) gl.bindBuffer(gl.ELEMENT_ARRAY_BUFFER, this.indicesBuffer);
+  }
 
-	unbind (shader: Shader) {
-		const gl = this.context.gl;
-		for (let i = 0; i < this.attributes.length; i++) {
-			const attrib = this.attributes[i];
-			const location = shader.getAttributeLocation(attrib.name);
-			gl.disableVertexAttribArray(location);
-		}
-		gl.bindBuffer(gl.ARRAY_BUFFER, null);
-		if (this.indicesLength > 0) gl.bindBuffer(gl.ELEMENT_ARRAY_BUFFER, null);
-	}
+  unbind(shader: Shader) {
+    const gl = this.context.gl;
+    for (let i = 0; i < this.attributes.length; i++) {
+      const attrib = this.attributes[i];
+      const location = shader.getAttributeLocation(attrib.name);
+      gl.disableVertexAttribArray(location);
+    }
+    gl.bindBuffer(gl.ARRAY_BUFFER, null);
+    if (this.indicesLength > 0) gl.bindBuffer(gl.ELEMENT_ARRAY_BUFFER, null);
+  }
 
-	private update () {
-		const gl = this.context.gl;
-		if (this.dirtyVertices) {
-			if (!this.verticesBuffer) {
-				this.verticesBuffer = gl.createBuffer();
-			}
-			gl.bindBuffer(gl.ARRAY_BUFFER, this.verticesBuffer);
-			gl.bufferData(gl.ARRAY_BUFFER, this.vertices.subarray(0, this.verticesLength), gl.DYNAMIC_DRAW);
-			this.dirtyVertices = false;
-		}
+  private update() {
+    const gl = this.context.gl;
+    if (this.dirtyVertices) {
+      if (!this.verticesBuffer) {
+        this.verticesBuffer = gl.createBuffer();
+      }
+      gl.bindBuffer(gl.ARRAY_BUFFER, this.verticesBuffer);
+      gl.bufferData(gl.ARRAY_BUFFER, this.vertices.subarray(0, this.verticesLength), gl.DYNAMIC_DRAW);
+      this.dirtyVertices = false;
+    }
 
-		if (this.dirtyIndices) {
-			if (!this.indicesBuffer) {
-				this.indicesBuffer = gl.createBuffer();
-			}
-			gl.bindBuffer(gl.ELEMENT_ARRAY_BUFFER, this.indicesBuffer);
-			gl.bufferData(gl.ELEMENT_ARRAY_BUFFER, this.indices.subarray(0, this.indicesLength), gl.DYNAMIC_DRAW);
-			this.dirtyIndices = false;
-		}
-	}
+    if (this.dirtyIndices) {
+      if (!this.indicesBuffer) {
+        this.indicesBuffer = gl.createBuffer();
+      }
+      gl.bindBuffer(gl.ELEMENT_ARRAY_BUFFER, this.indicesBuffer);
+      gl.bufferData(gl.ELEMENT_ARRAY_BUFFER, this.indices.subarray(0, this.indicesLength), gl.DYNAMIC_DRAW);
+      this.dirtyIndices = false;
+    }
+  }
 
-	restore () {
-		this.verticesBuffer = null;
-		this.indicesBuffer = null;
-		this.update();
-	}
+  restore() {
+    this.verticesBuffer = null;
+    this.indicesBuffer = null;
+    this.update();
+  }
 
-	dispose () {
-		this.context.removeRestorable(this);
-		const gl = this.context.gl;
-		gl.deleteBuffer(this.verticesBuffer);
-		gl.deleteBuffer(this.indicesBuffer);
-	}
+  dispose() {
+    this.context.removeRestorable(this);
+    const gl = this.context.gl;
+    gl.deleteBuffer(this.verticesBuffer);
+    gl.deleteBuffer(this.indicesBuffer);
+  }
 }
 
 export class VertexAttribute {
-	constructor (public name: string, public type: VertexAttributeType, public numElements: number) { }
+  constructor(
+    public name: string,
+    public type: VertexAttributeType,
+    public numElements: number,
+  ) {}
 }
 
 export class Position2Attribute extends VertexAttribute {
-	constructor () {
-		super(Shader.POSITION, VertexAttributeType.Float, 2);
-	}
+  constructor() {
+    super(Shader.POSITION, VertexAttributeType.Float, 2);
+  }
 }
 
 export class Position3Attribute extends VertexAttribute {
-	constructor () {
-		super(Shader.POSITION, VertexAttributeType.Float, 3);
-	}
+  constructor() {
+    super(Shader.POSITION, VertexAttributeType.Float, 3);
+  }
 }
 
 export class TexCoordAttribute extends VertexAttribute {
-	constructor (unit: number = 0) {
-		super(Shader.TEXCOORDS + (unit === 0 ? "" : unit), VertexAttributeType.Float, 2);
-	}
+  constructor(unit: number = 0) {
+    super(Shader.TEXCOORDS + (unit === 0 ? "" : unit), VertexAttributeType.Float, 2);
+  }
 }
 
 export class ColorAttribute extends VertexAttribute {
-	constructor () {
-		super(Shader.COLOR, VertexAttributeType.Float, 4);
-	}
+  constructor() {
+    super(Shader.COLOR, VertexAttributeType.Float, 4);
+  }
 }
 
 export class Color2Attribute extends VertexAttribute {
-	constructor () {
-		super(Shader.COLOR2, VertexAttributeType.Float, 4);
-	}
+  constructor() {
+    super(Shader.COLOR2, VertexAttributeType.Float, 4);
+  }
 }
 
-export enum VertexAttributeType {
-	Float
+export const enum VertexAttributeType {
+  Float,
 }
