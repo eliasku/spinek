@@ -1,0 +1,22 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <title>WebGL · spinek</title>
+  <link rel="stylesheet" href="./style.css" />
+</head>
+<body>
+  <nav aria-label="Examples"><a href="../">spinek</a><a href="./webgl.html">WebGL</a><a href="./canvas.html">Canvas</a><a href="./ek3d.html">ek3d</a></nav>
+  <h1>WebGL</h1>
+  <p>Binary skeleton, GPU batching, two-color tint and clipping.</p>
+  <div class="controls">
+    <label for="animation">Animation</label><select id="animation" disabled></select>
+    <button id="pause" type="button" aria-pressed="false" disabled>Pause</button>
+    <output id="status" role="status" aria-live="polite">Loading Spine 4.3 assets…</output>
+  </div>
+  <canvas aria-label="Animated Spineboy rendered with WebGL">Your browser must support Canvas to display this example.</canvas>
+  <p>Runtime and Spineboy assets: Esoteric Software, <a href="../assets/LICENSE">Spine Runtimes License</a>.</p>
+  <script type="module" src="./webgl.ts"></script>
+</body>
+</html>
