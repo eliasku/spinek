@@ -6,8 +6,7 @@
   "files": [
     "src",
     "LICENSE",
-    "README.md",
-    "OPTIMIZE_PLAN.md"
+    "README.md"
   ],
   "type": "module",
   "sideEffects": false,
@@ -25,19 +24,11 @@
     "check": "npm run typecheck && npm test && npm run build"
   },
   "devDependencies": {
-    "@types/node": "^26.0.0",
-    "ek3d": "file:../ek3d",
+    "@types/node": "^26.6.6",
+    "ek3d": "^0.1.0",
     "typescript": "^7.0.2",
     "vite": "npm:@voidzero-dev/vite-plus-core@1.4.0",
     "vite-plus": "1.4.0"
-  },
-  "peerDependencies": {
-    "ek3d": "^0.1.0"
-  },
-  "peerDependenciesMeta": {
-    "ek3d": {
-      "optional": true
-    }
   },
   "overrides": {
     "vite": "npm:@voidzero-dev/vite-plus-core@1.4.0"
@@ -45,5 +36,5 @@
   "engines": {
     "node": "^22.18.0 || ^24.11.0 || >=26.0.0"
   },
-  "packageManager": "npm@11.17.0"
+  "packageManager": "npm@11.21.1"
 }
