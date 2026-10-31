@@ -1,12 +1,10 @@
-import {
-  AnimationState,
-  AssetManagerBase,
-  AtlasAttachmentLoader,
-  SkeletonBinary,
-  SkeletonJson,
-  type SkeletonData,
-  type TextureAtlas,
-} from "spinek";
+import { AnimationState } from "spinek/core/AnimationState";
+import { AssetManagerBase } from "spinek/core/AssetManagerBase";
+import { AtlasAttachmentLoader } from "spinek/core/AtlasAttachmentLoader";
+import { SkeletonBinary } from "spinek/core/SkeletonBinary";
+import { SkeletonJson } from "spinek/core/SkeletonJson";
+import type { SkeletonData } from "spinek/core/SkeletonData";
+import type { TextureAtlas } from "spinek/core/TextureAtlas";
 
 export const canvas = document.querySelector<HTMLCanvasElement>("canvas")!;
 const status = document.querySelector<HTMLOutputElement>("#status")!;
@@ -55,10 +53,14 @@ export function runExample(state: AnimationState, render: (delta: number) => voi
     }
   };
   frame = requestAnimationFrame(tick);
-  window.addEventListener("pagehide", () => {
-    cancelAnimationFrame(frame);
-    dispose();
-  }, { once: true });
+  window.addEventListener(
+    "pagehide",
+    () => {
+      cancelAnimationFrame(frame);
+      dispose();
+    },
+    { once: true },
+  );
 }
 
 export function showError(error: unknown) {

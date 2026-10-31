@@ -1,33 +1,3 @@
-/******************************************************************************
- * Spine Runtimes License Agreement
- * Last updated April 5, 2025. Replaces all prior versions.
- *
- * Copyright (c) 2013-2025, Esoteric Software LLC
- *
- * Integration of the Spine Runtimes into software or otherwise creating
- * derivative works of the Spine Runtimes is permitted under the terms and
- * conditions of Section 2 of the Spine Editor License Agreement:
- * http://esotericsoftware.com/spine-editor-license
- *
- * Otherwise, it is permitted to integrate the Spine Runtimes into software
- * or otherwise create derivative works of the Spine Runtimes (collectively,
- * "Products"), provided that each user of the Products must obtain their own
- * Spine Editor license and redistribution of the Products in any form must
- * include this license and copyright notice.
- *
- * THE SPINE RUNTIMES ARE PROVIDED BY ESOTERIC SOFTWARE LLC "AS IS" AND ANY
- * EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE IMPLIED
- * WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE ARE
- * DISCLAIMED. IN NO EVENT SHALL ESOTERIC SOFTWARE LLC BE LIABLE FOR ANY
- * DIRECT, INDIRECT, INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL DAMAGES
- * (INCLUDING, BUT NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS OR SERVICES,
- * BUSINESS INTERRUPTION, OR LOSS OF USE, DATA, OR PROFITS) HOWEVER CAUSED AND
- * ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT LIABILITY, OR TORT
- * (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE OF
- * THE SPINE RUNTIMES, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
- *****************************************************************************/
-
-/** biome-ignore-all lint/complexity/noStaticOnlyClass: too much things to update */
 
 import type { Skeleton } from "./Skeleton.js";
 
@@ -183,7 +153,6 @@ export class Color {
 export class MathUtils {
 	static epsilon = 0.00001;
 	static epsilon2 = MathUtils.epsilon * MathUtils.epsilon;
-	// biome-ignore lint/suspicious/noApproximativeNumericConstant: reference runtime
 	static PI = 3.1415927;
 	static PI2 = MathUtils.PI * 2;
 	static invPI2 = 1 / MathUtils.PI2;
@@ -327,7 +296,6 @@ export class Utils {
 			array[i] = value;
 	}
 
-	// biome-ignore lint/suspicious/noExplicitAny: ok any in this case
 	static setArraySize<T> (array: Array<T>, size: number, value: any = 0): Array<T> {
 		const oldSize = array.length;
 		if (oldSize === size) return array;
@@ -338,7 +306,6 @@ export class Utils {
 		return array;
 	}
 
-	// biome-ignore lint/suspicious/noExplicitAny: ok any in this case
 	static ensureArrayCapacity<T> (array: Array<T>, size: number, value: any = 0): Array<T> {
 		if (array.length >= size) return array;
 		return Utils.setArraySize(array, size, value);
@@ -388,7 +355,6 @@ export class Utils {
 		return false;
 	}
 
-	// biome-ignore lint/suspicious/noExplicitAny: ok any in this case
 	static enumValue (type: any, name: string) {
 		return type[name[0].toUpperCase() + name.slice(1)];
 	}
@@ -412,12 +378,10 @@ export class Pool<T> {
 	}
 
 	obtain () {
-		// biome-ignore lint/style/noNonNullAssertion: length check
 		return this.items.length > 0 ? this.items.pop()! : this.instantiator();
 	}
 
 	free (item: T) {
-		// biome-ignore lint/suspicious/noExplicitAny: T can be anything
 		(item as any).reset?.();
 		this.items.push(item);
 	}

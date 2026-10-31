@@ -2,30 +2,28 @@
   "name": "spinek",
   "version": "0.1.0",
   "description": "TypeScript Spine 4.3 runtime with WebGL, Canvas and ek3d renderers",
-  "type": "module",
   "license": "LicenseRef-Spine-Runtimes",
+  "files": [
+    "src",
+    "LICENSE",
+    "README.md",
+    "OPTIMIZE_PLAN.md"
+  ],
+  "type": "module",
   "sideEffects": false,
-  "files": ["dist", "src", "LICENSE", "README.md", "OPTIMIZE_PLAN.md"],
   "exports": {
-    ".": { "types": "./dist/index.d.ts", "import": "./dist/index.js" },
-    "./webgl": { "types": "./dist/webgl.d.ts", "import": "./dist/webgl.js" },
-    "./canvas": { "types": "./dist/canvas.d.ts", "import": "./dist/canvas.js" },
-    "./ek3d": { "types": "./dist/ek3d.d.ts", "import": "./dist/ek3d.js" }
+    "./*": "./src/*.ts"
   },
   "scripts": {
     "dev": "vp dev --host 127.0.0.1",
-    "build": "vp pack",
     "build:examples": "vp build",
     "preview": "vp preview --host 127.0.0.1",
     "typecheck": "tsc --noEmit",
     "test": "vp test run",
     "lint": "vp lint",
     "format": "vp fmt",
-    "check": "npm run typecheck && npm test && npm run build && npm run build:examples",
-    "prepack": "npm run build"
+    "check": "npm run typecheck && npm test && npm run build:examples"
   },
-  "peerDependencies": { "ek3d": "^0.1.0" },
-  "peerDependenciesMeta": { "ek3d": { "optional": true } },
   "devDependencies": {
     "@types/node": "^26.0.0",
     "ek3d": "file:../ek3d",
@@ -33,7 +31,19 @@
     "vite": "npm:@voidzero-dev/vite-plus-core@1.4.0",
     "vite-plus": "1.4.0"
   },
-  "overrides": { "vite": "npm:@voidzero-dev/vite-plus-core@1.4.0" },
-  "engines": { "node": "^22.18.0 || ^24.11.0 || >=26.0.0" },
+  "peerDependencies": {
+    "ek3d": "^0.1.0"
+  },
+  "peerDependenciesMeta": {
+    "ek3d": {
+      "optional": true
+    }
+  },
+  "overrides": {
+    "vite": "npm:@voidzero-dev/vite-plus-core@1.4.0"
+  },
+  "engines": {
+    "node": "^22.18.0 || ^24.11.0 || >=26.0.0"
+  },
   "packageManager": "npm@11.17.0"
 }

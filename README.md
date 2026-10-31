@@ -15,41 +15,47 @@ npm run dev
 
 На стартовой странице — три примера с переключением анимаций и паузой:
 
-| URL | Рендер | Данные |
-| --- | --- | --- |
-| `/examples/webgl.html` | WebGL, batching, two-color tint, clipping | `spineboy-pro.skel` |
+| URL                     | Рендер                                              | Данные              |
+| ----------------------- | --------------------------------------------------- | ------------------- |
+| `/examples/webgl.html`  | WebGL, batching, two-color tint, clipping           | `spineboy-pro.skel` |
 | `/examples/canvas.html` | Canvas 2D, regions/meshes, slot blending и clipping | `spineboy-pro.json` |
-| `/examples/ek3d.html` | `SkeletonMesh` в сцене ek3d | `spineboy-pro.json` |
+| `/examples/ek3d.html`   | `SkeletonMesh` в сцене ek3d                         | `spineboy-pro.json` |
 
 ```sh
-npm run build           # ESM SDK + .d.ts + sourcemaps → dist/
 npm run build:examples  # Статические примеры → dist-examples/
 npm run preview        # Просмотр собранных примеров
 npm run typecheck
 npm test
-npm run check          # Типы, тесты и обе сборки
+npm run check          # Типы, тесты и сборка примеров
 ```
 
-Инструменты — [Vite+](https://viteplus.dev/guide/): `vp dev`, `vp pack`, `vp build`, `vp test`, `vp lint`, `vp fmt`. Зависимости фиксируются в `package-lock.json`; после первого install можно использовать `npm ci`.
+Инструменты — [Vite+](https://viteplus.dev/guide/): `vp dev`, `vp build`, `vp test`, `vp lint`, `vp fmt`. Зависимости фиксируются в `package-lock.json`; после первого install можно использовать `npm ci`.
 
 ## Импорты
 
 ```ts
-import { AnimationState, SkeletonJson, SkeletonBinary, Physics } from "spinek";
-import { AssetManager, SceneRenderer } from "spinek/webgl";
-// Отдельный entry point с одноимёнными Canvas-классами:
-import { SkeletonRenderer } from "spinek/canvas";
-import { SkeletonMesh } from "spinek/ek3d";
+import { AnimationState } from "spinek/core/AnimationState";
+import { SkeletonJson } from "spinek/core/SkeletonJson";
+import { SkeletonBinary } from "spinek/core/SkeletonBinary";
+import { Physics } from "spinek/core/Physics";
+import { AssetManager } from "spinek/webgl/AssetManager";
+import { SceneRenderer } from "spinek/webgl/SceneRenderer";
+import { SkeletonRenderer } from "spinek/canvas/SkeletonRenderer";
+import { SkeletonMesh } from "spinek/ek3d/SkeletonMesh";
 ```
 
-Корневой entry point содержит только ядро. Каждый renderer entry point также экспортирует это же ядро; его классы не дублируются между рендерами. В npm-пакет входят сборка, декларации, исходники и лицензия; upstream и примеры в пакет не входят.
+Библиотека распространяется исходными TypeScript-файлами: `exports` сопоставляет `spinek/*` с `src/*.ts`, включая вложенные каталоги. Каждый символ импортируется из определяющего его файла, без расширения; корневого entry point и barrel-файлов нет. Нужен TypeScript-aware bundler. В npm-пакет входят весь `src/`, документация и `LICENSE`; предсобранные JS, upstream и примеры в пакет не входят.
 
 Полные запускаемые варианты загрузки atlas, JSON/binary, управления анимацией и освобождения ресурсов находятся в `examples/`.
 
 ### ek3d
 
 ```ts
-import { AssetManager, AtlasAttachmentLoader, SkeletonJson, SkeletonMesh, type TextureAtlas } from "spinek/ek3d";
+import { AtlasAttachmentLoader } from "spinek/core/AtlasAttachmentLoader";
+import { SkeletonJson } from "spinek/core/SkeletonJson";
+import type { TextureAtlas } from "spinek/core/TextureAtlas";
+import { AssetManager } from "spinek/ek3d/AssetManager";
+import { SkeletonMesh } from "spinek/ek3d/SkeletonMesh";
 
 const assets = new AssetManager("/assets/");
 assets.loadTextureAtlas("spineboy.atlas");
@@ -68,7 +74,7 @@ renderer.render(scene, camera);
 
 // При удалении сцены:
 scene.remove(mesh);
-mesh.dispose();   // Геометрия и материалы; atlas можно разделять между mesh.
+mesh.dispose(); // Геометрия и материалы; atlas можно разделять между mesh.
 assets.dispose(); // Atlas и текстуры.
 ```
 
@@ -82,7 +88,7 @@ assets.dispose(); // Atlas и текстуры.
 - Binary reader учитывает `byteOffset` и `byteLength` у переданного `Uint8Array`, включая Node.js Buffer и subarray.
 - `AssetManager.disposeAsset(path)` принимает путь относительно своего `pathPrefix`, как `load/get/require`; ресурсы с префиксом освобождаются без повторного добавления префикса.
 - В Canvas triangle mode поддерживаются meshes, clipping (включая inverse) и ближайшие native composite equivalents для slot blending. Включайте `renderer.triangleRendering = true`, как в примере. RGB/two-color tint не поддерживается; blending на прозрачном фоне может отличаться от WebGL. Image mode предназначен для regions.
-- Для ek3d нужен TypeScript-aware bundler: ek3d поставляется исходниками. В этой рабочей копии используется локальный `../ek3d`; импорт `spinek/ek3d` требует установленный ek3d, остальные entry points — нет.
+- ek3d также поставляется исходниками. В этой рабочей копии используется локальный `../ek3d`; импорты `spinek/ek3d/*` требуют установленный ek3d, ядро и WebGL/Canvas — нет.
 - Адаптер ek3d предоставляет native `mesh.skeletonPhysics` с opt-in наследованием перемещения и вращения; по умолчанию коэффициенты равны нулю. Материалы используют `forceSinglePass`, чтобы сохранить slot draw order при отрицательных масштабах.
 - Примеры работают в браузере. Browser AssetManager использует DOM APIs и `requestAnimationFrame`; ядро можно использовать без DOM.
 
@@ -90,7 +96,7 @@ assets.dispose(); // Atlas и текстуры.
 
 `tests/core.test.ts` загружает реальные JSON и binary fixtures 4.3, проверяет анимацию, world vertices, sequence UVs, bounds, чтение binary из subarray, освобождение prefixed assets по reference count и разделение constrained/applied poses. `tests/ek3d.test.ts` проверяет изменение геометрии, material groups и освобождение ресурсов для one-/two-color режимов без GPU.
 
-`npm run lint` работает, но сохраняет предупреждения перенесённого кода, в основном unused parameters/locals и upstream enum aliases. Массовая стилистическая переработка runtime в перенос не входит.
+`npm run lint` не находит неиспользуемых импортов. Оставшиеся предупреждения относятся к параметрам, стилю перенесённого кода и upstream enum aliases; их массовая переработка не входит в чистку импортов.
 
 ## Лицензия
 

@@ -1,32 +1,3 @@
-/******************************************************************************
- * Spine Runtimes License Agreement
- * Last updated April 5, 2025. Replaces all prior versions.
- *
- * Copyright (c) 2013-2025, Esoteric Software LLC
- *
- * Integration of the Spine Runtimes into software or otherwise creating
- * derivative works of the Spine Runtimes is permitted under the terms and
- * conditions of Section 2 of the Spine Editor License Agreement:
- * http://esotericsoftware.com/spine-editor-license
- *
- * Otherwise, it is permitted to integrate the Spine Runtimes into software
- * or otherwise create derivative works of the Spine Runtimes (collectively,
- * "Products"), provided that each user of the Products must obtain their own
- * Spine Editor license and redistribution of the Products in any form must
- * include this license and copyright notice.
- *
- * THE SPINE RUNTIMES ARE PROVIDED BY ESOTERIC SOFTWARE LLC "AS IS" AND ANY
- * EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE IMPLIED
- * WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE ARE
- * DISCLAIMED. IN NO EVENT SHALL ESOTERIC SOFTWARE LLC BE LIABLE FOR ANY
- * DIRECT, INDIRECT, INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL DAMAGES
- * (INCLUDING, BUT NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS OR SERVICES,
- * BUSINESS INTERRUPTION, OR LOSS OF USE, DATA, OR PROFITS) HOWEVER CAUSED AND
- * ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT LIABILITY, OR TORT
- * (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE OF
- * THE SPINE RUNTIMES, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
- *****************************************************************************/
-
 import type { Bone } from "./Bone.js";
 import { Inherit } from "./BoneData.js";
 import type { BonePose } from "./BonePose.js";
@@ -117,7 +88,6 @@ export class IkConstraint extends Constraint<IkConstraint, IkConstraintData, IkC
 	private static apply1 (skeleton: Skeleton, bone: BonePose, targetX: number, targetY: number, compress: boolean, stretch: boolean, scaleYMode: ScaleYMode, mix: number) {
 		bone.modifyLocal(skeleton);
 
-		// biome-ignore lint/style/noNonNullAssertion: reference runtime
 		const p = bone.bone.parent!.appliedPose;
 
 		let pa = p.a, pb = p.b, pc = p.c, pd = p.d;
@@ -128,7 +98,6 @@ export class IkConstraint extends Constraint<IkConstraint, IkConstraintData, IkC
 				tx = (targetX - bone.worldX) * MathUtils.signum(skeleton.scaleX);
 				ty = (targetY - bone.worldY) * MathUtils.signum(skeleton.scaleY);
 				break;
-			// biome-ignore lint/suspicious/noFallthroughSwitchClause: reference runtime
 			case Inherit.NoRotationOrReflection: {
 				const s = Math.abs(pa * pd - pb * pc) / Math.max(MathUtils.epsilon, pa * pa + pc * pc);
 				const sa = pa / skeleton.scaleX;
@@ -214,7 +183,6 @@ export class IkConstraint extends Constraint<IkConstraint, IkConstraintData, IkC
 			cwx = a * child.x + b * child.y + parent.worldX;
 			cwy = c * child.x + d * child.y + parent.worldY;
 		}
-		// biome-ignore lint/style/noNonNullAssertion: reference runtime
 		const pp = parent.bone.parent!.appliedPose;
 		a = pp.a;
 		b = pp.b;
@@ -244,7 +212,6 @@ export class IkConstraint extends Constraint<IkConstraint, IkConstraintData, IkC
 				dd = tx * tx + ty * ty;
 			}
 		}
-		// biome-ignore lint/suspicious/noConfusingLabels: reference runtime
 		outer:
 		if (u) {
 			l2 *= psx;

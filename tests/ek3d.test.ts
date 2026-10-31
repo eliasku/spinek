@@ -2,8 +2,12 @@ import { readFileSync } from "node:fs";
 import { describe, expect, it, vi } from "vite-plus/test";
 import { InterleavedBufferAttribute } from "ek3d/core/InterleavedBufferAttribute";
 import { Scene } from "ek3d/scenes/Scene";
-import { AtlasAttachmentLoader, SkeletonJson, TextureAtlas } from "../src/core/index.js";
-import { Ek3dTexture, MeshBatcher, SkeletonMesh } from "../src/ek3d/index.js";
+import { AtlasAttachmentLoader } from "spinek/core/AtlasAttachmentLoader";
+import { SkeletonJson } from "spinek/core/SkeletonJson";
+import { TextureAtlas } from "spinek/core/TextureAtlas";
+import { Ek3dTexture } from "spinek/ek3d/Ek3dTexture";
+import { MeshBatcher } from "spinek/ek3d/MeshBatcher";
+import { SkeletonMesh } from "spinek/ek3d/SkeletonMesh";
 
 const asset = (name: string) => new URL(`../public/assets/${name}`, import.meta.url);
 
@@ -15,7 +19,9 @@ describe("ek3d adapter", () => {
       page.setTexture(texture);
       return texture;
     });
-    const data = new SkeletonJson(new AtlasAttachmentLoader(atlas)).readSkeletonData(readFileSync(asset("spineboy-pro.json"), "utf8"));
+    const data = new SkeletonJson(new AtlasAttachmentLoader(atlas)).readSkeletonData(
+      readFileSync(asset("spineboy-pro.json"), "utf8"),
+    );
     const mesh = new SkeletonMesh({ skeletonData: data, twoColorTint });
     const scene = new Scene();
     scene.add(mesh);

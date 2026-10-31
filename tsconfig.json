@@ -7,13 +7,7 @@
     "strict": true,
     "skipLibCheck": true,
     "noEmit": true,
-    "types": ["node"],
-    "paths": {
-      "spinek": ["./src/index.ts"],
-      "spinek/webgl": ["./src/webgl/index.ts"],
-      "spinek/canvas": ["./src/canvas/index.ts"],
-      "spinek/ek3d": ["./src/ek3d/index.ts"]
-    }
+    "types": ["node"]
   },
   "include": ["src", "examples", "tests", "vite.config.ts"]
 }

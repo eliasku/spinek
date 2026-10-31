@@ -1,32 +1,3 @@
-/******************************************************************************
- * Spine Runtimes License Agreement
- * Last updated April 5, 2025. Replaces all prior versions.
- *
- * Copyright (c) 2013-2025, Esoteric Software LLC
- *
- * Integration of the Spine Runtimes into software or otherwise creating
- * derivative works of the Spine Runtimes is permitted under the terms and
- * conditions of Section 2 of the Spine Editor License Agreement:
- * http://esotericsoftware.com/spine-editor-license
- *
- * Otherwise, it is permitted to integrate the Spine Runtimes into software
- * or otherwise create derivative works of the Spine Runtimes (collectively,
- * "Products"), provided that each user of the Products must obtain their own
- * Spine Editor license and redistribution of the Products in any form must
- * include this license and copyright notice.
- *
- * THE SPINE RUNTIMES ARE PROVIDED BY ESOTERIC SOFTWARE LLC "AS IS" AND ANY
- * EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE IMPLIED
- * WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE ARE
- * DISCLAIMED. IN NO EVENT SHALL ESOTERIC SOFTWARE LLC BE LIABLE FOR ANY
- * DIRECT, INDIRECT, INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL DAMAGES
- * (INCLUDING, BUT NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS OR SERVICES,
- * BUSINESS INTERRUPTION, OR LOSS OF USE, DATA, OR PROFITS) HOWEVER CAUSED AND
- * ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT LIABILITY, OR TORT
- * (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE OF
- * THE SPINE RUNTIMES, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
- *****************************************************************************/
-
 import { AlphaTimeline, Animation, AttachmentTimeline, type BoneTimeline2, type CurveTimeline, type CurveTimeline1, DeformTimeline, DrawOrderFolderTimeline, DrawOrderTimeline, EventTimeline, IkConstraintTimeline, InheritTimeline, PathConstraintMixTimeline, PathConstraintPositionTimeline, PathConstraintSpacingTimeline, PhysicsConstraintDampingTimeline, PhysicsConstraintGravityTimeline, PhysicsConstraintInertiaTimeline, PhysicsConstraintMassTimeline, PhysicsConstraintMixTimeline, PhysicsConstraintResetTimeline, PhysicsConstraintStrengthTimeline, PhysicsConstraintWindTimeline, RGB2Timeline, RGBA2Timeline, RGBATimeline, RGBTimeline, RotateTimeline, ScaleTimeline, ScaleXTimeline, ScaleYTimeline, SequenceTimeline, ShearTimeline, ShearXTimeline, ShearYTimeline, SliderMixTimeline, SliderTimeline, type Timeline, TransformConstraintTimeline, TranslateTimeline, TranslateXTimeline, TranslateYTimeline } from "./Animation.js";
 import type { Attachment, VertexAttachment } from "./attachments/Attachment.js";
 import type { AttachmentLoader } from "./attachments/AttachmentLoader.js";
@@ -65,7 +36,6 @@ export class SkeletonJson {
 		this.attachmentLoader = attachmentLoader;
 	}
 
-	// biome-ignore lint/suspicious/noExplicitAny: it is any until we define a schema
 	readSkeletonData (json: string | any): SkeletonData {
 		const scale = this.scale;
 		const skeletonData = new SkeletonData();
@@ -452,7 +422,6 @@ export class SkeletonJson {
 			linkedMesh.mesh.timelineAttachment = linkedMesh.inheritTimelines ? source : linkedMesh.mesh;
 			linkedMesh.mesh.setSourceMesh(source as MeshAttachment);
 			linkedMesh.mesh.updateSequence();
-			// biome-ignore lint/suspicious/noConfusingLabels: reference runtime
 			outer:
 			if (linkedMesh.inheritTimelines && linkedMesh.slotIndex !== linkedMesh.sourceIndex) {
 				const slots = source.timelineSlots;
@@ -500,7 +469,6 @@ export class SkeletonJson {
 					const animationName = animationMap.animation;
 					const animation = skeletonData.findAnimation(animationName);
 					if (!animation) throw new Error(`Slider animation not found: ${animationName}`);
-					// biome-ignore lint/style/noNonNullAssertion: reference runtime
 					data!.animation = animation;
 				}
 			}
@@ -531,7 +499,6 @@ export class SkeletonJson {
 		}
 	}
 
-	// biome-ignore lint/suspicious/noExplicitAny: it is any until we define a schema
 	readAttachment (map: any, skin: Skin, slotIndex: number, placeholder: string, skeletonData: SkeletonData): Attachment | null {
 		const scale = this.scale;
 		const name = getValue(map, "name", placeholder);
@@ -662,7 +629,6 @@ export class SkeletonJson {
 		return sequence;
 	}
 
-	// biome-ignore lint/suspicious/noExplicitAny: it is any until we define a schema
 	readVertices (map: any, attachment: VertexAttachment, verticesLength: number) {
 		const scale = this.scale;
 		attachment.worldVerticesLength = verticesLength;
@@ -692,7 +658,6 @@ export class SkeletonJson {
 		attachment.vertices = Utils.toFloatArray(weights);
 	}
 
-	// biome-ignore lint/suspicious/noExplicitAny: it is any untile we define a schema
 	readAnimation (map: any, name: string, skeletonData: SkeletonData) {
 		const scale = this.scale;
 		const timelines: Timeline[] = [];
@@ -1400,7 +1365,6 @@ function readCurve (curve: [number, number, number, number] | "stepped", timelin
 	return bezier + 1;
 }
 
-// biome-ignore lint/suspicious/noExplicitAny: it is any until we define a schema
 function getValue (map: any, property: string, defaultValue: any) {
 	return map[property] !== undefined ? map[property] : defaultValue;
 }
