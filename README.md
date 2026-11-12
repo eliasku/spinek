@@ -31,10 +31,10 @@ See the complete examples for asset loading, animation updates, rendering and re
 
 ## Run the examples
 
-Requires Node.js `^22.18.0 || ^24.11.0 || >=26.0.0` and npm. In the repository directory:
+Requires Node.js `^22.22.2 || ^24.15.0 || >=26.0.0` and npm 12.2.2. Vite+ is pinned to 1.5.0. In the repository directory:
 
 ```sh
-npm install
+npm ci
 npm run dev
 ```
 
@@ -43,10 +43,13 @@ Open the local URL printed by the dev server. The landing page links to all thre
 ```sh
 npm run build    # Build the static example site into dist/
 npm run preview  # Serve the built site
-npm run check    # Type checking, tests and example site build
+npm run check    # Lint and type checking
+npm run verify   # Checks, tests and example site build
 ```
 
 The npm package does not include the examples or their assets; use the repository to run them.
+
+Formatting remains a separate `npm run format:check` command; the existing source formatting baseline is not clean.
 
 ## License
 

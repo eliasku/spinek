@@ -23,23 +23,25 @@
     "build": "vp build",
     "preview": "vp preview --host 127.0.0.1",
     "typecheck": "tsc --noEmit",
-    "test": "vp test run",
+    "test": "vp test",
     "lint": "vp lint",
     "format": "vp fmt",
-    "check": "npm run typecheck && npm test && npm run build"
+    "format:check": "vp fmt --check",
+    "check": "npm run lint && npm run typecheck",
+    "verify": "npm run check && npm test && npm run build"
   },
   "devDependencies": {
     "@types/node": "^26.6.6",
     "ek3d": "^0.1.0",
     "typescript": "^7.0.2",
-    "vite": "npm:@voidzero-dev/vite-plus-core@1.4.0",
-    "vite-plus": "1.4.0"
+    "vite": "npm:@voidzero-dev/vite-plus-core@1.5.0",
+    "vite-plus": "1.5.0"
   },
   "overrides": {
-    "vite": "npm:@voidzero-dev/vite-plus-core@1.4.0"
+    "vite": "npm:@voidzero-dev/vite-plus-core@1.5.0"
   },
   "engines": {
-    "node": "^22.18.0 || ^24.11.0 || >=26.0.0"
+    "node": "^22.22.2 || ^24.15.0 || >=26.0.0"
   },
-  "packageManager": "npm@11.21.1"
+  "packageManager": "npm@12.2.2"
 }
