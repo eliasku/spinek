@@ -51,6 +51,10 @@ The npm package does not include the examples or their assets; use the repositor
 
 Formatting remains a separate `npm run format:check` command; the existing source formatting baseline is not clean.
 
+TypeScript configurations live in `scripts/`: `tsconfig.base.json` provides shared options; `tsconfig.test.json`, `tsconfig.node.json`, and `tsconfig.lib.json` cover Vitest tests, Node.js scripts/configs, and browser library sources/examples. The root `tsconfig.json` only lists project references. `npm run typecheck` runs `tsc -b`, with build metadata stored in `node_modules/.cache/`.
+
+Vite explicitly uses `scripts/tsconfig.lib.json`. Its `ES2025.Float16` types support ek3d's optional `Float16Array` usage without exposing Node.js globals to browser code; the compilation target remains ES2022.
+
 ## License
 
 The runtime and bundled Spineboy example assets are covered by the [Spine Runtimes License Agreement](./LICENSE). See it for Spine Editor licensing requirements and redistribution obligations. The example asset license is also included in [public/assets/LICENSE](./public/assets/LICENSE).

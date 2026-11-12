@@ -1,3 +1,4 @@
+// oxlint-disable unicorn/no-new-array
 import type { Attachment, VertexAttachment } from "./attachments/Attachment.js";
 import type { HasSequence } from "./attachments/HasSequence.js";
 import { SequenceMode, SequenceModeValues } from "./attachments/Sequence.js";
@@ -2873,12 +2874,12 @@ export class PhysicsConstraintResetTimeline extends Timeline implements Constrai
     skeleton: Skeleton,
     lastTime: number,
     time: number,
-    firedEvents: Array<Event>,
+    _firedEvents: Array<Event>,
     alpha: number,
     from: MixFrom,
-    add: boolean,
-    out: boolean,
-    appliedPose: boolean,
+    _add: boolean,
+    _out: boolean,
+    _appliedPose: boolean,
   ) {
     let constraint: PhysicsConstraint | undefined;
     if (this.constraintIndex !== -1) {

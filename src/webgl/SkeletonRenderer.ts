@@ -9,185 +9,212 @@ import type { GLTexture } from "./GLTexture.js";
 import type { PolygonBatcher } from "./PolygonBatcher.js";
 import type { ManagedWebGLRenderingContext } from "./WebGL.js";
 
-
 class Renderable {
-	constructor (public vertices: NumberArrayLike, public numVertices: number, public numFloats: number) { }
-};
+  constructor(
+    public vertices: NumberArrayLike,
+    public numVertices: number,
+    public numFloats: number,
+  ) {}
+}
 
 export type VertexTransformer = (vertices: NumberArrayLike, numVertices: number, stride: number) => void;
 
 export class SkeletonRenderer {
-	static QUAD_TRIANGLES = [0, 1, 2, 2, 3, 0];
+  static QUAD_TRIANGLES = [0, 1, 2, 2, 3, 0];
 
-	private tempColor = new Color();
-	private tempColor2 = new Color();
-	private vertices: NumberArrayLike;
-	private vertexSize = 2 + 2 + 4;
-	private twoColorTint = false;
-	private renderable: Renderable = new Renderable([], 0, 0);
-	private clipper: SkeletonClipping = new SkeletonClipping();
+  private tempColor = new Color();
+  private tempColor2 = new Color();
+  private vertices: NumberArrayLike;
+  private vertexSize = 2 + 2 + 4;
+  private twoColorTint = false;
+  private renderable: Renderable = new Renderable([], 0, 0);
+  private clipper: SkeletonClipping = new SkeletonClipping();
 
-	/**
-	 * Batches additive slots together with normal slots by rendering additive slots with premultiplied alpha RGB and zero alpha,
-	 * while using normal PMA blending. This reduces draw calls for normal/additive/normal sequences with the same texture.
-	 * Disable this if rendering to a transparent target and the accumulated destination alpha from additive blending must be preserved.
-	 */
-	pmaAdditiveBatching = true;
+  /**
+   * Batches additive slots together with normal slots by rendering additive slots with premultiplied alpha RGB and zero alpha,
+   * while using normal PMA blending. This reduces draw calls for normal/additive/normal sequences with the same texture.
+   * Disable this if rendering to a transparent target and the accumulated destination alpha from additive blending must be preserved.
+   */
+  pmaAdditiveBatching = true;
 
-	constructor (context: ManagedWebGLRenderingContext, twoColorTint: boolean = true) {
-		this.twoColorTint = twoColorTint;
-		if (twoColorTint)
-			this.vertexSize += 4;
-		this.vertices = Utils.newFloatArray(this.vertexSize * 1024);
-	}
+  constructor(context: ManagedWebGLRenderingContext, twoColorTint: boolean = true) {
+    this.twoColorTint = twoColorTint;
+    if (twoColorTint) this.vertexSize += 4;
+    this.vertices = Utils.newFloatArray(this.vertexSize * 1024);
+  }
 
-	draw (batcher: PolygonBatcher, skeleton: Skeleton, slotRangeStart: number = -1, slotRangeEnd: number = -1, transformer: VertexTransformer | null = null) {
-		const clipper = this.clipper;
-		const twoColorTint = this.twoColorTint;
-		let blendMode: BlendMode | null = null;
+  draw(
+    batcher: PolygonBatcher,
+    skeleton: Skeleton,
+    slotRangeStart: number = -1,
+    slotRangeEnd: number = -1,
+    transformer: VertexTransformer | null = null,
+  ) {
+    const clipper = this.clipper;
+    const twoColorTint = this.twoColorTint;
+    let blendMode: BlendMode | null = null;
 
-		const renderable: Renderable = this.renderable;
-		let uvs: NumberArrayLike;
-		let triangles: Array<number>;
-		const drawOrder = skeleton.drawOrder.appliedPose;
-		let attachmentColor: Color;
-		const skeletonColor = skeleton.color;
-		const vertexSize = twoColorTint ? 12 : 8;
-		let inRange = false;
-		if (slotRangeStart === -1) inRange = true;
-		for (let i = 0, n = drawOrder.length; i < n; i++) {
-			const slot = drawOrder[i];
-			if (!slot.bone.active) {
-				clipper.clipEnd(slot);
-				continue;
-			}
+    const renderable: Renderable = this.renderable;
+    let uvs: NumberArrayLike;
+    let triangles: Array<number>;
+    const drawOrder = skeleton.drawOrder.appliedPose;
+    let attachmentColor: Color;
+    const skeletonColor = skeleton.color;
+    const vertexSize = twoColorTint ? 12 : 8;
+    let inRange = false;
+    if (slotRangeStart === -1) inRange = true;
+    for (let i = 0, n = drawOrder.length; i < n; i++) {
+      const slot = drawOrder[i];
+      if (!slot.bone.active) {
+        clipper.clipEnd(slot);
+        continue;
+      }
 
-			if (slotRangeStart >= 0 && slotRangeStart === slot.data.index) {
-				inRange = true;
-			}
+      if (slotRangeStart >= 0 && slotRangeStart === slot.data.index) {
+        inRange = true;
+      }
 
-			if (!inRange) {
-				clipper.clipEnd(slot);
-				continue;
-			}
+      if (!inRange) {
+        clipper.clipEnd(slot);
+        continue;
+      }
 
-			if (slotRangeEnd >= 0 && slotRangeEnd === slot.data.index) {
-				inRange = false;
-			}
+      if (slotRangeEnd >= 0 && slotRangeEnd === slot.data.index) {
+        inRange = false;
+      }
 
-			const pose = slot.appliedPose;
-			const attachment = pose.attachment;
-			let texture: GLTexture;
-			if (attachment instanceof RegionAttachment) {
-				renderable.vertices = this.vertices;
-				renderable.numVertices = 4;
-				renderable.numFloats = vertexSize << 2;
+      const pose = slot.appliedPose;
+      const attachment = pose.attachment;
+      let texture: GLTexture;
+      if (attachment instanceof RegionAttachment) {
+        renderable.vertices = this.vertices;
+        renderable.numVertices = 4;
+        renderable.numFloats = vertexSize << 2;
 
-				const sequence = attachment.sequence;
-				const sequenceIndex = sequence.resolveIndex(pose);
-				attachment.computeWorldVertices(slot, attachment.getOffsets(pose), renderable.vertices, 0, vertexSize);
+        const sequence = attachment.sequence;
+        const sequenceIndex = sequence.resolveIndex(pose);
+        attachment.computeWorldVertices(slot, attachment.getOffsets(pose), renderable.vertices, 0, vertexSize);
 
-				triangles = SkeletonRenderer.QUAD_TRIANGLES;
-				uvs = sequence.getUVs(sequenceIndex);
-				texture = sequence.regions[sequenceIndex]?.texture as GLTexture;
-				attachmentColor = attachment.color;
-			} else if (attachment instanceof MeshAttachment) {
-				renderable.vertices = this.vertices;
-				renderable.numVertices = (attachment.worldVerticesLength >> 1);
-				renderable.numFloats = renderable.numVertices * vertexSize;
+        triangles = SkeletonRenderer.QUAD_TRIANGLES;
+        uvs = sequence.getUVs(sequenceIndex);
+        texture = sequence.regions[sequenceIndex]?.texture as GLTexture;
+        attachmentColor = attachment.color;
+      } else if (attachment instanceof MeshAttachment) {
+        renderable.vertices = this.vertices;
+        renderable.numVertices = attachment.worldVerticesLength >> 1;
+        renderable.numFloats = renderable.numVertices * vertexSize;
 
-				if (renderable.numFloats > renderable.vertices.length) {
-					renderable.vertices = this.vertices = Utils.newFloatArray(renderable.numFloats);
-				}
-				attachment.computeWorldVertices(skeleton, slot, 0, attachment.worldVerticesLength, renderable.vertices, 0, vertexSize);
-				triangles = attachment.triangles;
+        if (renderable.numFloats > renderable.vertices.length) {
+          renderable.vertices = this.vertices = Utils.newFloatArray(renderable.numFloats);
+        }
+        attachment.computeWorldVertices(
+          skeleton,
+          slot,
+          0,
+          attachment.worldVerticesLength,
+          renderable.vertices,
+          0,
+          vertexSize,
+        );
+        triangles = attachment.triangles;
 
-				const sequence = attachment.sequence;
-				const sequenceIndex = sequence.resolveIndex(pose);
+        const sequence = attachment.sequence;
+        const sequenceIndex = sequence.resolveIndex(pose);
 
-				texture = sequence.regions[sequenceIndex]?.texture as GLTexture;
-				uvs = sequence.getUVs(sequenceIndex);
-				attachmentColor = attachment.color;
-			} else if (attachment instanceof ClippingAttachment) {
-				clipper.clipEnd(slot);
-				clipper.clipStart(skeleton, slot, attachment);
-				continue;
-			} else {
-				clipper.clipEnd(slot);
-				continue;
-			}
+        texture = sequence.regions[sequenceIndex]?.texture as GLTexture;
+        uvs = sequence.getUVs(sequenceIndex);
+        attachmentColor = attachment.color;
+      } else if (attachment instanceof ClippingAttachment) {
+        clipper.clipEnd(slot);
+        clipper.clipStart(skeleton, slot, attachment);
+        continue;
+      } else {
+        clipper.clipEnd(slot);
+        continue;
+      }
 
-			if (texture) {
-				const slotColor = pose.color;
-				const finalColor = this.tempColor;
-				const alpha = skeletonColor.a * slotColor.a * attachmentColor.a;
-				finalColor.r = skeletonColor.r * slotColor.r * attachmentColor.r * alpha;
-				finalColor.g = skeletonColor.g * slotColor.g * attachmentColor.g * alpha;
-				finalColor.b = skeletonColor.b * slotColor.b * attachmentColor.b * alpha;
+      if (texture) {
+        const slotColor = pose.color;
+        const finalColor = this.tempColor;
+        const alpha = skeletonColor.a * slotColor.a * attachmentColor.a;
+        finalColor.r = skeletonColor.r * slotColor.r * attachmentColor.r * alpha;
+        finalColor.g = skeletonColor.g * slotColor.g * attachmentColor.g * alpha;
+        finalColor.b = skeletonColor.b * slotColor.b * attachmentColor.b * alpha;
 
-				const slotBlendMode = slot.data.blendMode;
-				const additiveBlend = this.pmaAdditiveBatching && slotBlendMode === BlendMode.Additive;
-				finalColor.a = additiveBlend ? 0 : alpha;
+        const slotBlendMode = slot.data.blendMode;
+        const additiveBlend = this.pmaAdditiveBatching && slotBlendMode === BlendMode.Additive;
+        finalColor.a = additiveBlend ? 0 : alpha;
 
-				const darkColor = this.tempColor2;
-				if (!pose.darkColor)
-					darkColor.set(0, 0, 0, 1.0);
-				else {
-					darkColor.r = pose.darkColor.r * alpha;
-					darkColor.g = pose.darkColor.g * alpha;
-					darkColor.b = pose.darkColor.b * alpha;
-					darkColor.a = 1;
-				}
+        const darkColor = this.tempColor2;
+        if (!pose.darkColor) darkColor.set(0, 0, 0, 1.0);
+        else {
+          darkColor.r = pose.darkColor.r * alpha;
+          darkColor.g = pose.darkColor.g * alpha;
+          darkColor.b = pose.darkColor.b * alpha;
+          darkColor.a = 1;
+        }
 
-				const batchBlendMode = additiveBlend ? BlendMode.Normal : slotBlendMode;
-				if (batchBlendMode !== blendMode) {
-					blendMode = batchBlendMode;
-					batcher.setBlendMode(blendMode);
-				}
+        const batchBlendMode = additiveBlend ? BlendMode.Normal : slotBlendMode;
+        if (batchBlendMode !== blendMode) {
+          blendMode = batchBlendMode;
+          batcher.setBlendMode(blendMode);
+        }
 
-				if (clipper.isClipping() && clipper.clipTriangles(renderable.vertices, triangles, triangles.length, uvs, finalColor, darkColor, twoColorTint, vertexSize)) {
-					const clippedVertices = new Float32Array(clipper.clippedVertices);
-					const clippedTriangles = clipper.clippedTriangles;
-					if (transformer) transformer(clippedVertices, clippedVertices.length, vertexSize);
-					batcher.draw(texture, clippedVertices, clippedTriangles);
-				} else {
-					const verts = renderable.vertices;
-					if (!twoColorTint) {
-						for (let v = 2, u = 0, n = renderable.numFloats; v < n; v += vertexSize, u += 2) {
-							verts[v] = finalColor.r;
-							verts[v + 1] = finalColor.g;
-							verts[v + 2] = finalColor.b;
-							verts[v + 3] = finalColor.a;
-							verts[v + 4] = uvs[u];
-							verts[v + 5] = uvs[u + 1];
-						}
-					} else {
-						for (let v = 2, u = 0, n = renderable.numFloats; v < n; v += vertexSize, u += 2) {
-							verts[v] = finalColor.r;
-							verts[v + 1] = finalColor.g;
-							verts[v + 2] = finalColor.b;
-							verts[v + 3] = finalColor.a;
-							verts[v + 4] = uvs[u];
-							verts[v + 5] = uvs[u + 1];
-							verts[v + 6] = darkColor.r;
-							verts[v + 7] = darkColor.g;
-							verts[v + 8] = darkColor.b;
-							verts[v + 9] = darkColor.a;
-						}
-					}
-					const view = (renderable.vertices as Float32Array).subarray(0, renderable.numFloats);
-					if (transformer) transformer(renderable.vertices, renderable.numFloats, vertexSize);
-					batcher.draw(texture, view, triangles);
-				}
-			}
+        if (
+          clipper.isClipping() &&
+          clipper.clipTriangles(
+            renderable.vertices,
+            triangles,
+            triangles.length,
+            uvs,
+            finalColor,
+            darkColor,
+            twoColorTint,
+            vertexSize,
+          )
+        ) {
+          const clippedVertices = new Float32Array(clipper.clippedVertices);
+          const clippedTriangles = clipper.clippedTriangles;
+          if (transformer) transformer(clippedVertices, clippedVertices.length, vertexSize);
+          batcher.draw(texture, clippedVertices, clippedTriangles);
+        } else {
+          const verts = renderable.vertices;
+          if (!twoColorTint) {
+            for (let v = 2, u = 0, n = renderable.numFloats; v < n; v += vertexSize, u += 2) {
+              verts[v] = finalColor.r;
+              verts[v + 1] = finalColor.g;
+              verts[v + 2] = finalColor.b;
+              verts[v + 3] = finalColor.a;
+              verts[v + 4] = uvs[u];
+              verts[v + 5] = uvs[u + 1];
+            }
+          } else {
+            for (let v = 2, u = 0, n = renderable.numFloats; v < n; v += vertexSize, u += 2) {
+              verts[v] = finalColor.r;
+              verts[v + 1] = finalColor.g;
+              verts[v + 2] = finalColor.b;
+              verts[v + 3] = finalColor.a;
+              verts[v + 4] = uvs[u];
+              verts[v + 5] = uvs[u + 1];
+              verts[v + 6] = darkColor.r;
+              verts[v + 7] = darkColor.g;
+              verts[v + 8] = darkColor.b;
+              verts[v + 9] = darkColor.a;
+            }
+          }
+          const view = (renderable.vertices as Float32Array).subarray(0, renderable.numFloats);
+          if (transformer) transformer(renderable.vertices, renderable.numFloats, vertexSize);
+          batcher.draw(texture, view, triangles);
+        }
+      }
 
-			clipper.clipEnd(slot);
-		}
-		clipper.clipEnd();
-	}
+      clipper.clipEnd(slot);
+    }
+    clipper.clipEnd();
+  }
 
-	/** Returns the {@link SkeletonClipping} used by this renderer for use with e.g. {@link Skeleton.getBounds} **/
-	public getSkeletonClipping (): SkeletonClipping {
-		return this.clipper;
-	}
+  /** Returns the {@link SkeletonClipping} used by this renderer for use with e.g. {@link Skeleton.getBounds} **/
+  public getSkeletonClipping(): SkeletonClipping {
+    return this.clipper;
+  }
 }

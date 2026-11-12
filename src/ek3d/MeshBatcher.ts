@@ -16,260 +16,287 @@ import { SkeletonMesh } from "./SkeletonMesh.js";
 import { Ek3dTexture, type BlendOptions } from "./Ek3dTexture.js";
 
 export type MaterialWithMap = Material & { map: EkTexture | null };
-export type MaterialParameters = Pick<Partial<Material>,
-	"side" | "depthWrite" | "depthTest" | "transparent" | "alphaTest" | "vertexColors" | "premultipliedAlpha" | "forceSinglePass">;
+export type MaterialParameters = Pick<
+  Partial<Material>,
+  | "side"
+  | "depthWrite"
+  | "depthTest"
+  | "transparent"
+  | "alphaTest"
+  | "vertexColors"
+  | "premultipliedAlpha"
+  | "forceSinglePass"
+>;
 export class MeshBatcher extends Mesh<MaterialWithMap[]> {
-	public static MAX_VERTICES = 10920;
+  public static MAX_VERTICES = 10920;
 
-	private vertexSize = 9;
-	private vertexBuffer: InterleavedBuffer;
-	private vertices: Float32Array;
-	private verticesLength = 0;
-	private indices: Uint16Array;
-	private indicesLength = 0;
-	private materialGroups: [number, number, number][] = [];
+  private vertexSize = 9;
+  private vertexBuffer: InterleavedBuffer;
+  private vertices: Float32Array;
+  private verticesLength = 0;
+  private indices: Uint16Array;
+  private indicesLength = 0;
+  private materialGroups: [number, number, number][] = [];
 
-	constructor (
-		maxVertices: number = MeshBatcher.MAX_VERTICES,
-		private materialFactory: (parameters: MaterialParameters) => MaterialWithMap,
-		private twoColorTint = true,
-	) {
-		super(new BufferGeometry(), []);
-		// Animated vertices invalidate any cached bounding sphere.
-		this.frustumCulled = false;
+  constructor(
+    maxVertices: number = MeshBatcher.MAX_VERTICES,
+    private materialFactory: (parameters: MaterialParameters) => MaterialWithMap,
+    private twoColorTint = true,
+  ) {
+    super(new BufferGeometry(), []);
+    // Animated vertices invalidate any cached bounding sphere.
+    this.frustumCulled = false;
 
-		if (maxVertices > MeshBatcher.MAX_VERTICES) throw new Error("Can't have more than 10920 triangles per batch: " + maxVertices);
+    if (maxVertices > MeshBatcher.MAX_VERTICES)
+      throw new Error("Can't have more than 10920 triangles per batch: " + maxVertices);
 
-		if (twoColorTint) {
-			this.vertexSize += 3;
-		}
+    if (twoColorTint) {
+      this.vertexSize += 3;
+    }
 
-		this.vertices = new Float32Array(maxVertices * this.vertexSize);
-		this.indices = new Uint16Array(maxVertices * 3);
+    this.vertices = new Float32Array(maxVertices * this.vertexSize);
+    this.indices = new Uint16Array(maxVertices * 3);
 
-		const normals = new Float32Array(maxVertices * 3);
-		for (let i = 0; i < maxVertices * 3; i += 3) {
-			normals[i] = 0;
-			normals[i + 1] = 0;
-			normals[i + 2] = -1;
-		}
+    const normals = new Float32Array(maxVertices * 3);
+    for (let i = 0; i < maxVertices * 3; i += 3) {
+      normals[i] = 0;
+      normals[i + 1] = 0;
+      normals[i + 2] = -1;
+    }
 
-		const vertexBuffer = new InterleavedBuffer(this.vertices, this.vertexSize)
-		this.vertexBuffer = vertexBuffer;
-		this.vertexBuffer.usage = BufferUsage.DynamicDraw;
+    const vertexBuffer = new InterleavedBuffer(this.vertices, this.vertexSize);
+    this.vertexBuffer = vertexBuffer;
+    this.vertexBuffer.usage = BufferUsage.DynamicDraw;
 
-		const geo = this.geometry;
-		geo.setAttribute("position", new InterleavedBufferAttribute(vertexBuffer, 3, 0, false));
-		geo.setAttribute("color", new InterleavedBufferAttribute(vertexBuffer, 4, 3, false));
-		geo.setAttribute("uv", new InterleavedBufferAttribute(vertexBuffer, 2, 7, false));
-		if (twoColorTint)
-			geo.setAttribute("darkcolor", new InterleavedBufferAttribute(vertexBuffer, 3, 9, false));
+    const geo = this.geometry;
+    geo.setAttribute("position", new InterleavedBufferAttribute(vertexBuffer, 3, 0, false));
+    geo.setAttribute("color", new InterleavedBufferAttribute(vertexBuffer, 4, 3, false));
+    geo.setAttribute("uv", new InterleavedBufferAttribute(vertexBuffer, 2, 7, false));
+    if (twoColorTint) geo.setAttribute("darkcolor", new InterleavedBufferAttribute(vertexBuffer, 3, 9, false));
 
-		const normalBuffer = new BufferAttribute(normals, 3);
-		normalBuffer.usage = BufferUsage.StaticDraw;
-		geo.setAttribute("normal", normalBuffer);
+    const normalBuffer = new BufferAttribute(normals, 3);
+    normalBuffer.usage = BufferUsage.StaticDraw;
+    geo.setAttribute("normal", normalBuffer);
 
-		const indexBuffer = new BufferAttribute(this.indices, 1);
-		indexBuffer.usage = BufferUsage.DynamicDraw;
-		geo.setIndex(indexBuffer);
+    const indexBuffer = new BufferAttribute(this.indices, 1);
+    indexBuffer.usage = BufferUsage.DynamicDraw;
+    geo.setIndex(indexBuffer);
 
-		geo.drawRange.start = 0;
-		geo.drawRange.count = 0;
-		this.geometry = geo;
-		this.material = [];
-	}
+    geo.drawRange.start = 0;
+    geo.drawRange.count = 0;
+    this.geometry = geo;
+    this.material = [];
+  }
 
-	dispose () {
-		this.geometry.dispose();
-		for (const material of this.material) material.dispose();
-	}
+  dispose() {
+    this.geometry.dispose();
+    for (const material of this.material) material.dispose();
+  }
 
-	clear () {
-		this.geometry.drawRange.count = 0;
-		this.geometry.clearGroups();
-		this.materialGroups = [];
-		for (const material of this.material) material.map = null;
-		return this;
-	}
+  clear() {
+    this.geometry.drawRange.count = 0;
+    this.geometry.clearGroups();
+    this.materialGroups = [];
+    for (const material of this.material) material.map = null;
+    return this;
+  }
 
-	begin () {
-		this.verticesLength = 0;
-		this.indicesLength = 0;
-	}
+  begin() {
+    this.verticesLength = 0;
+    this.indicesLength = 0;
+  }
 
-	canBatch (numVertices: number, numIndices: number) {
-		if (this.indicesLength + numIndices > this.indices.length) return false;
-		if (this.verticesLength / this.vertexSize + numVertices > this.vertices.length / this.vertexSize) return false;
-		return true;
-	}
+  canBatch(numVertices: number, numIndices: number) {
+    if (this.indicesLength + numIndices > this.indices.length) return false;
+    if (this.verticesLength / this.vertexSize + numVertices > this.vertices.length / this.vertexSize) return false;
+    return true;
+  }
 
-	batch (vertices: ArrayLike<number>, verticesLength: number, indices: ArrayLike<number>, indicesLength: number, z: number = 0) {
-		let indexStart = this.verticesLength / this.vertexSize;
-		let vertexBuffer = this.vertices;
-		let i = this.verticesLength;
-		let j = 0;
-		if (this.twoColorTint) {
-			for (; j < verticesLength;) {
-				vertexBuffer[i++] = vertices[j++];  // x
-				vertexBuffer[i++] = vertices[j++];  // y
-				vertexBuffer[i++] = z;				// z
+  batch(
+    vertices: ArrayLike<number>,
+    verticesLength: number,
+    indices: ArrayLike<number>,
+    indicesLength: number,
+    z: number = 0,
+  ) {
+    let indexStart = this.verticesLength / this.vertexSize;
+    let vertexBuffer = this.vertices;
+    let i = this.verticesLength;
+    let j = 0;
+    if (this.twoColorTint) {
+      for (; j < verticesLength;) {
+        vertexBuffer[i++] = vertices[j++]; // x
+        vertexBuffer[i++] = vertices[j++]; // y
+        vertexBuffer[i++] = z; // z
 
-				vertexBuffer[i++] = vertices[j++];  // r
-				vertexBuffer[i++] = vertices[j++];  // g
-				vertexBuffer[i++] = vertices[j++];  // b
-				vertexBuffer[i++] = vertices[j++];  // a
+        vertexBuffer[i++] = vertices[j++]; // r
+        vertexBuffer[i++] = vertices[j++]; // g
+        vertexBuffer[i++] = vertices[j++]; // b
+        vertexBuffer[i++] = vertices[j++]; // a
 
-				vertexBuffer[i++] = vertices[j++];  // u
-				vertexBuffer[i++] = vertices[j++];  // v
+        vertexBuffer[i++] = vertices[j++]; // u
+        vertexBuffer[i++] = vertices[j++]; // v
 
-				vertexBuffer[i++] = vertices[j++];  // dark r
-				vertexBuffer[i++] = vertices[j++];  // dark g
-				vertexBuffer[i++] = vertices[j++];  // dark b
-				j++;
-			}
-		} else {
-			for (; j < verticesLength;) {
-				vertexBuffer[i++] = vertices[j++];  // x
-				vertexBuffer[i++] = vertices[j++];  // y
-				vertexBuffer[i++] = z;				// z
+        vertexBuffer[i++] = vertices[j++]; // dark r
+        vertexBuffer[i++] = vertices[j++]; // dark g
+        vertexBuffer[i++] = vertices[j++]; // dark b
+        j++;
+      }
+    } else {
+      for (; j < verticesLength;) {
+        vertexBuffer[i++] = vertices[j++]; // x
+        vertexBuffer[i++] = vertices[j++]; // y
+        vertexBuffer[i++] = z; // z
 
-				vertexBuffer[i++] = vertices[j++];  // r
-				vertexBuffer[i++] = vertices[j++];  // g
-				vertexBuffer[i++] = vertices[j++];  // b
-				vertexBuffer[i++] = vertices[j++];  // a
+        vertexBuffer[i++] = vertices[j++]; // r
+        vertexBuffer[i++] = vertices[j++]; // g
+        vertexBuffer[i++] = vertices[j++]; // b
+        vertexBuffer[i++] = vertices[j++]; // a
 
-				vertexBuffer[i++] = vertices[j++];  // u
-				vertexBuffer[i++] = vertices[j++];  // v
-			}
-		}
-		this.verticesLength = i;
+        vertexBuffer[i++] = vertices[j++]; // u
+        vertexBuffer[i++] = vertices[j++]; // v
+      }
+    }
+    this.verticesLength = i;
 
-		let indicesArray = this.indices;
-		for (i = this.indicesLength, j = 0; j < indicesLength; i++, j++)
-			indicesArray[i] = indices[j] + indexStart;
-		this.indicesLength += indicesLength;
-	}
+    let indicesArray = this.indices;
+    for (i = this.indicesLength, j = 0; j < indicesLength; i++, j++) indicesArray[i] = indices[j] + indexStart;
+    this.indicesLength += indicesLength;
+  }
 
-	end () {
-		this.vertexBuffer.needsUpdate = this.verticesLength > 0;
-		this.vertexBuffer.clearUpdateRanges();
-		this.vertexBuffer.addUpdateRange(0, this.verticesLength);
-		const geo = (<BufferGeometry>this.geometry);
-		this.closeMaterialGroups();
-		const index = geo.getIndex();
-		if (!index) throw new Error("BufferAttribute must not be null.");
-		index.needsUpdate = this.indicesLength > 0;
-		index.clearUpdateRanges();
-		index.addUpdateRange(0, this.indicesLength);
-		geo.drawRange.start = 0;
-		geo.drawRange.count = this.indicesLength;
-	}
+  end() {
+    this.vertexBuffer.needsUpdate = this.verticesLength > 0;
+    this.vertexBuffer.clearUpdateRanges();
+    this.vertexBuffer.addUpdateRange(0, this.verticesLength);
+    const geo = <BufferGeometry>this.geometry;
+    this.closeMaterialGroups();
+    const index = geo.getIndex();
+    if (!index) throw new Error("BufferAttribute must not be null.");
+    index.needsUpdate = this.indicesLength > 0;
+    index.clearUpdateRanges();
+    index.addUpdateRange(0, this.indicesLength);
+    geo.drawRange.start = 0;
+    geo.drawRange.count = this.indicesLength;
+  }
 
-	addMaterialGroup (indicesLength: number, materialGroup: number) {
-		const currentGroup = this.materialGroups[this.materialGroups.length - 1];
+  addMaterialGroup(indicesLength: number, materialGroup: number) {
+    const currentGroup = this.materialGroups[this.materialGroups.length - 1];
 
-		if (currentGroup === undefined || currentGroup[2] !== materialGroup) {
-			this.materialGroups.push([this.indicesLength, indicesLength, materialGroup]);
-		} else {
-			currentGroup[1] += indicesLength;
-		}
-	}
+    if (currentGroup === undefined || currentGroup[2] !== materialGroup) {
+      this.materialGroups.push([this.indicesLength, indicesLength, materialGroup]);
+    } else {
+      currentGroup[1] += indicesLength;
+    }
+  }
 
-	private closeMaterialGroups () {
-		const geometry = this.geometry as BufferGeometry;
-		for (let i = 0; i < this.materialGroups.length; i++) {
-			const [startIndex, count, materialGroup] = this.materialGroups[i];
+  private closeMaterialGroups() {
+    const geometry = this.geometry as BufferGeometry;
+    for (let i = 0; i < this.materialGroups.length; i++) {
+      const [startIndex, count, materialGroup] = this.materialGroups[i];
 
-			geometry.addGroup(startIndex, count, materialGroup);
-		}
-	}
+      geometry.addGroup(startIndex, count, materialGroup);
+    }
+  }
 
-	findMaterialGroup (slotTexture: EkTexture, slotBlendMode: BlendMode) {
-		const blendingObject = Ek3dTexture.toBlending(slotBlendMode);
-		let group = -1;
+  findMaterialGroup(slotTexture: EkTexture, slotBlendMode: BlendMode) {
+    const blendingObject = Ek3dTexture.toBlending(slotBlendMode);
+    let group = -1;
 
-		if (Array.isArray(this.material)) {
-			for (let i = 0; i < this.material.length; i++) {
-				const meshMaterial = this.material[i] as MaterialWithMap;
+    if (Array.isArray(this.material)) {
+      for (let i = 0; i < this.material.length; i++) {
+        const meshMaterial = this.material[i] as MaterialWithMap;
 
-				if (!meshMaterial.map) {
-					updateMeshMaterial(meshMaterial, slotTexture, blendingObject);
-					return i;
-				}
+        if (!meshMaterial.map) {
+          updateMeshMaterial(meshMaterial, slotTexture, blendingObject);
+          return i;
+        }
 
-				if (meshMaterial.map === slotTexture
-					&& blendingObject.blending === meshMaterial.blending
-					&& (blendingObject.blendSrc === undefined || blendingObject.blendSrc === meshMaterial.blendSrc)
-					&& (blendingObject.blendDst === undefined || blendingObject.blendDst === meshMaterial.blendDst)
-					&& (blendingObject.blendSrcAlpha === undefined || blendingObject.blendSrcAlpha === meshMaterial.blendSrcAlpha)
-					&& (blendingObject.blendDstAlpha === undefined || blendingObject.blendDstAlpha === meshMaterial.blendDstAlpha)
-				) {
-					return i;
-				}
-			}
+        if (
+          meshMaterial.map === slotTexture &&
+          blendingObject.blending === meshMaterial.blending &&
+          (blendingObject.blendSrc === undefined || blendingObject.blendSrc === meshMaterial.blendSrc) &&
+          (blendingObject.blendDst === undefined || blendingObject.blendDst === meshMaterial.blendDst) &&
+          (blendingObject.blendSrcAlpha === undefined || blendingObject.blendSrcAlpha === meshMaterial.blendSrcAlpha) &&
+          (blendingObject.blendDstAlpha === undefined || blendingObject.blendDstAlpha === meshMaterial.blendDstAlpha)
+        ) {
+          return i;
+        }
+      }
 
-			const meshMaterial = this.newMaterial();
-			updateMeshMaterial(meshMaterial as MaterialWithMap, slotTexture, blendingObject);
-			this.material.push(meshMaterial);
-			group = this.material.length - 1;
-		} else {
-			throw new Error("MeshBatcher.material needs to be an array for geometry groups to work");
-		}
+      const meshMaterial = this.newMaterial();
+      updateMeshMaterial(meshMaterial as MaterialWithMap, slotTexture, blendingObject);
+      this.material.push(meshMaterial);
+      group = this.material.length - 1;
+    } else {
+      throw new Error("MeshBatcher.material needs to be an array for geometry groups to work");
+    }
 
-		return group;
-	}
+    return group;
+  }
 
-	private newMaterial (): MaterialWithMap {
-		const meshMaterial = this.materialFactory(SkeletonMesh.DEFAULT_MATERIAL_PARAMETERS);
+  private newMaterial(): MaterialWithMap {
+    const meshMaterial = this.materialFactory(SkeletonMesh.DEFAULT_MATERIAL_PARAMETERS);
 
-		if (!('map' in meshMaterial)) {
-			throw new Error("The material factory must return a material having the map property for the texture.");
-		}
+    if (!("map" in meshMaterial)) {
+      throw new Error("The material factory must return a material having the map property for the texture.");
+    }
 
-		if (meshMaterial instanceof SkeletonMeshMaterial) {
-			if (!this.twoColorTint) {
-				meshMaterial.vertexShader = meshMaterial.vertexShader.replace("attribute vec3 darkcolor;", "").replace("vDark = darkcolor;", "vDark = vec3(0.0);");
-			}
-			return meshMaterial;
-		}
+    if (meshMaterial instanceof SkeletonMeshMaterial) {
+      if (!this.twoColorTint) {
+        meshMaterial.vertexShader = meshMaterial.vertexShader
+          .replace("attribute vec3 darkcolor;", "")
+          .replace("vDark = darkcolor;", "vDark = vec3(0.0);");
+      }
+      return meshMaterial;
+    }
 
-		meshMaterial.onBeforeCompile = (shader) => {
-			// ek3d expands shader chunks before this hook; Three.js #include tokens no longer exist.
-			if (this.twoColorTint) {
-				shader.vertexShader = "attribute vec3 darkcolor;\nvarying vec3 vSpineDark;\n" +
-					shader.vertexShader.replace(colorVertex, colorVertex + "\nvSpineDark = darkcolor;\n");
-				shader.fragmentShader = "varying vec3 vSpineDark;\n" + shader.fragmentShader.replace(colorFragment, `
+    meshMaterial.onBeforeCompile = (shader) => {
+      // ek3d expands shader chunks before this hook; Three.js #include tokens no longer exist.
+      if (this.twoColorTint) {
+        shader.vertexShader =
+          "attribute vec3 darkcolor;\nvarying vec3 vSpineDark;\n" +
+          shader.vertexShader.replace(colorVertex, colorVertex + "\nvSpineDark = darkcolor;\n");
+        shader.fragmentShader =
+          "varying vec3 vSpineDark;\n" +
+          shader.fragmentShader.replace(
+            colorFragment,
+            `
 					#ifdef USE_COLOR_ALPHA
 						diffuseColor.rgb = (diffuseColor.a - diffuseColor.rgb) * vSpineDark + diffuseColor.rgb * vColor.rgb;
 						diffuseColor.a *= vColor.a;
 					#endif
-				`);
-			}
-			shader.fragmentShader = shader.fragmentShader
-				.replace(premultipliedAlphaFragment, "")
-				.replace(colorspaceFragment, "");
-		};
-		meshMaterial.customProgramCacheKey = () => this.twoColorTint ? "spinek-two-color" : "spinek-one-color";
+				`,
+          );
+      }
+      shader.fragmentShader = shader.fragmentShader
+        .replace(premultipliedAlphaFragment, "")
+        .replace(colorspaceFragment, "");
+    };
+    meshMaterial.customProgramCacheKey = () => (this.twoColorTint ? "spinek-two-color" : "spinek-one-color");
 
-		return meshMaterial;
-	}
+    return meshMaterial;
+  }
 }
 
-
-function updateMeshMaterial (meshMaterial: MaterialWithMap, slotTexture: EkTexture, blending: BlendOptions) {
-	meshMaterial.map = slotTexture;
-	Object.assign(meshMaterial, blending);
-	meshMaterial.needsUpdate = true;
+function updateMeshMaterial(meshMaterial: MaterialWithMap, slotTexture: EkTexture, blending: BlendOptions) {
+  meshMaterial.map = slotTexture;
+  Object.assign(meshMaterial, blending);
+  meshMaterial.needsUpdate = true;
 }
-
 
 export class SkeletonMeshMaterial extends ShaderMaterial {
-	get map(): EkTexture | null { return this.uniforms.map.value; }
-	set map(value: EkTexture | null) { this.uniforms.map.value = value; }
-	constructor(parameters: MaterialParameters = {}) {
-		super({ ...parameters, uniforms: { map: { value: null } },
-			vertexShader: `attribute vec3 darkcolor; varying vec2 vUv; varying vec4 vColor; varying vec3 vDark; void main() { vUv = uv; vColor = color; vDark = darkcolor; gl_Position = projectionMatrix * modelViewMatrix * vec4(position, 1.0); }`,
-			fragmentShader: `uniform sampler2D map; varying vec2 vUv; varying vec4 vColor; varying vec3 vDark; void main() { vec4 tex = texture2D(map, vUv); gl_FragColor = vec4((tex.a - tex.rgb) * vDark + tex.rgb * vColor.rgb, tex.a * vColor.a); if (gl_FragColor.a < 0.001) discard; }`
-		});
-	}
+  get map(): EkTexture | null {
+    return this.uniforms.map.value;
+  }
+  set map(value: EkTexture | null) {
+    this.uniforms.map.value = value;
+  }
+  constructor(parameters: MaterialParameters = {}) {
+    super({
+      ...parameters,
+      uniforms: { map: { value: null } },
+      vertexShader: `attribute vec3 darkcolor; varying vec2 vUv; varying vec4 vColor; varying vec3 vDark; void main() { vUv = uv; vColor = color; vDark = darkcolor; gl_Position = projectionMatrix * modelViewMatrix * vec4(position, 1.0); }`,
+      fragmentShader: `uniform sampler2D map; varying vec2 vUv; varying vec4 vColor; varying vec3 vDark; void main() { vec4 tex = texture2D(map, vUv); gl_FragColor = vec4((tex.a - tex.rgb) * vDark + tex.rgb * vColor.rgb, tex.a * vColor.a); if (gl_FragColor.a < 0.001) discard; }`,
+    });
+  }
 }

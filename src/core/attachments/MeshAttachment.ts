@@ -10,162 +10,166 @@ import type { Sequence } from "./Sequence.js";
  *
  * See [Mesh attachments](http://esotericsoftware.com/spine-meshes) in the Spine User Guide. */
 export class MeshAttachment extends VertexAttachment implements HasSequence {
-	readonly sequence: Sequence;
+  readonly sequence: Sequence;
 
-	/** The UV pair for each vertex, normalized within the texture region. */
-	regionUVs: NumberArrayLike = [];
+  /** The UV pair for each vertex, normalized within the texture region. */
+  regionUVs: NumberArrayLike = [];
 
-	/** Triplets of vertex indices which describe the mesh's triangulation. */
-	triangles: Array<number> = [];
+  /** Triplets of vertex indices which describe the mesh's triangulation. */
+  triangles: Array<number> = [];
 
-	/** The number of entries at the beginning of {@link vertices} that make up the mesh hull. */
-	hullLength: number = 0;
+  /** The number of entries at the beginning of {@link vertices} that make up the mesh hull. */
+  hullLength: number = 0;
 
-	/** The name of the texture region for this attachment. */
-	path?: string;
+  /** The name of the texture region for this attachment. */
+  path?: string;
 
-	/** The color to tint the mesh. */
-	color = new Color(1, 1, 1, 1);
+  /** The color to tint the mesh. */
+  color = new Color(1, 1, 1, 1);
 
-	private sourceMesh: MeshAttachment | null = null;
+  private sourceMesh: MeshAttachment | null = null;
 
-	/** Vertex index pairs describing edges for controlling triangulation, or null if nonessential data was not exported. Mesh
-	 * triangles do not never cross edges. Triangulation is not performed at runtime. */
-	edges: Array<number> = [];
+  /** Vertex index pairs describing edges for controlling triangulation, or null if nonessential data was not exported. Mesh
+   * triangles do not never cross edges. Triangulation is not performed at runtime. */
+  edges: Array<number> = [];
 
-	/** The width of the mesh's image. Available only when nonessential data was exported. */
-	width: number = 0;
+  /** The width of the mesh's image. Available only when nonessential data was exported. */
+  width: number = 0;
 
-	/** The height of the mesh's image. Available only when nonessential data was exported. */
-	height: number = 0;
+  /** The height of the mesh's image. Available only when nonessential data was exported. */
+  height: number = 0;
 
-	tempColor = new Color(0, 0, 0, 0);
+  tempColor = new Color(0, 0, 0, 0);
 
-	constructor (name: string, sequence: Sequence) {
-		super(name);
-		this.sequence = sequence;
-	}
+  constructor(name: string, sequence: Sequence) {
+    super(name);
+    this.sequence = sequence;
+  }
 
-	copy (): MeshAttachment {
-		if (this.sourceMesh) return this.newLinkedMesh();
+  copy(): MeshAttachment {
+    if (this.sourceMesh) return this.newLinkedMesh();
 
-		const copy = new MeshAttachment(this.name, this.sequence.copy());
-		copy.path = this.path;
-		copy.color.setFromColor(this.color);
+    const copy = new MeshAttachment(this.name, this.sequence.copy());
+    copy.path = this.path;
+    copy.color.setFromColor(this.color);
 
-		this.copyTo(copy);
-		copy.regionUVs = [];
-		Utils.arrayCopy(this.regionUVs, 0, copy.regionUVs, 0, this.regionUVs.length);
-		copy.triangles = [];
-		Utils.arrayCopy(this.triangles, 0, copy.triangles, 0, this.triangles.length);
-		copy.hullLength = this.hullLength;
+    this.copyTo(copy);
+    copy.regionUVs = [];
+    Utils.arrayCopy(this.regionUVs, 0, copy.regionUVs, 0, this.regionUVs.length);
+    copy.triangles = [];
+    Utils.arrayCopy(this.triangles, 0, copy.triangles, 0, this.triangles.length);
+    copy.hullLength = this.hullLength;
 
-		// Nonessential.
-		if (this.edges) {
-			copy.edges = [];
-			Utils.arrayCopy(this.edges, 0, copy.edges, 0, this.edges.length);
-		}
-		copy.width = this.width;
-		copy.height = this.height;
+    // Nonessential.
+    if (this.edges) {
+      copy.edges = [];
+      Utils.arrayCopy(this.edges, 0, copy.edges, 0, this.edges.length);
+    }
+    copy.width = this.width;
+    copy.height = this.height;
 
-		return copy;
-	}
+    return copy;
+  }
 
-	updateSequence () {
-		this.sequence.update(this);
-	}
+  updateSequence() {
+    this.sequence.update(this);
+  }
 
-	/** The source mesh if this is a linked mesh, else null. A linked mesh shares the {@link bones}, {@link vertices},
-	 * {@link regionUVs}, {@link triangles}, {@link hullLength}, {@link edges}, {@link width}, and {@link height} with the
-	 * source mesh, but may have a different {@link name} or {@link path}, and therefore a different texture region. */
-	getSourceMesh () {
-		return this.sourceMesh;
-	}
+  /** The source mesh if this is a linked mesh, else null. A linked mesh shares the {@link bones}, {@link vertices},
+   * {@link regionUVs}, {@link triangles}, {@link hullLength}, {@link edges}, {@link width}, and {@link height} with the
+   * source mesh, but may have a different {@link name} or {@link path}, and therefore a different texture region. */
+  getSourceMesh() {
+    return this.sourceMesh;
+  }
 
-	setSourceMesh (sourceMesh: MeshAttachment | null) {
-		this.sourceMesh = sourceMesh;
-		if (sourceMesh) {
-			this.bones = sourceMesh.bones;
-			this.vertices = sourceMesh.vertices;
-			this.worldVerticesLength = sourceMesh.worldVerticesLength;
-			this.regionUVs = sourceMesh.regionUVs;
-			this.triangles = sourceMesh.triangles;
-			this.hullLength = sourceMesh.hullLength;
-			this.worldVerticesLength = sourceMesh.worldVerticesLength
-			this.edges = sourceMesh.edges;
-			this.width = sourceMesh.width;
-			this.height = sourceMesh.height;
-		}
-	}
+  setSourceMesh(sourceMesh: MeshAttachment | null) {
+    this.sourceMesh = sourceMesh;
+    if (sourceMesh) {
+      this.bones = sourceMesh.bones;
+      this.vertices = sourceMesh.vertices;
+      this.worldVerticesLength = sourceMesh.worldVerticesLength;
+      this.regionUVs = sourceMesh.regionUVs;
+      this.triangles = sourceMesh.triangles;
+      this.hullLength = sourceMesh.hullLength;
+      this.worldVerticesLength = sourceMesh.worldVerticesLength;
+      this.edges = sourceMesh.edges;
+      this.width = sourceMesh.width;
+      this.height = sourceMesh.height;
+    }
+  }
 
-	/** Returns a new mesh with the {@link sourceMesh} set to this mesh's source mesh, if any, else to this mesh. **/
-	newLinkedMesh (): MeshAttachment {
-		const copy = new MeshAttachment(this.name, this.sequence.copy());
-		copy.timelineAttachment = this.timelineAttachment;
-		copy.path = this.path;
-		copy.color.setFromColor(this.color);
-		copy.setSourceMesh(this.sourceMesh ? this.sourceMesh : this);
-		copy.updateSequence();
-		return copy;
-	}
+  /** Returns a new mesh with the {@link sourceMesh} set to this mesh's source mesh, if any, else to this mesh. **/
+  newLinkedMesh(): MeshAttachment {
+    const copy = new MeshAttachment(this.name, this.sequence.copy());
+    copy.timelineAttachment = this.timelineAttachment;
+    copy.path = this.path;
+    copy.color.setFromColor(this.color);
+    copy.setSourceMesh(this.sourceMesh ? this.sourceMesh : this);
+    copy.updateSequence();
+    return copy;
+  }
 
-	/** Computes {@link Sequence.getUVs | UVs} for a mesh attachment.
-	 * @param uvs Output array for the computed UVs, same length as regionUVs. */
-	static computeUVs (region: TextureRegion | null, regionUVs: NumberArrayLike, uvs: NumberArrayLike): void {
-		if (!region) throw new Error("Region not set.");
-		const n = uvs.length;
-		let u = region.u, v = region.v, width = 0, height = 0;
-		if (region instanceof TextureAtlasRegion) {
-			const page = region.page;
-			const textureWidth = page.width, textureHeight = page.height;
-			switch (region.degrees) {
-				case 90:
-					u -= (region.originalHeight - region.offsetY - region.height) / textureWidth;
-					v -= (region.originalWidth - region.offsetX - region.width) / textureHeight;
-					width = region.originalHeight / textureWidth;
-					height = region.originalWidth / textureHeight;
-					for (let i = 0; i < n; i += 2) {
-						uvs[i] = u + regionUVs[i + 1] * width;
-						uvs[i + 1] = v + (1 - regionUVs[i]) * height;
-					}
-					return;
-				case 180:
-					u -= (region.originalWidth - region.offsetX - region.width) / textureWidth;
-					v -= region.offsetY / textureHeight;
-					width = region.originalWidth / textureWidth;
-					height = region.originalHeight / textureHeight;
-					for (let i = 0; i < n; i += 2) {
-						uvs[i] = u + (1 - regionUVs[i]) * width;
-						uvs[i + 1] = v + (1 - regionUVs[i + 1]) * height;
-					}
-					return;
-				case 270:
-					u -= region.offsetY / textureWidth;
-					v -= region.offsetX / textureHeight;
-					width = region.originalHeight / textureWidth;
-					height = region.originalWidth / textureHeight;
-					for (let i = 0; i < n; i += 2) {
-						uvs[i] = u + (1 - regionUVs[i + 1]) * width;
-						uvs[i + 1] = v + regionUVs[i] * height;
-					}
-					return;
-				default:
-					u -= region.offsetX / textureWidth;
-					v -= (region.originalHeight - region.offsetY - region.height) / textureHeight;
-					width = region.originalWidth / textureWidth;
-					height = region.originalHeight / textureHeight;
-			}
-		} else if (!region) {
-			u = v = 0;
-			width = height = 1;
-		} else {
-			width = region.u2 - u;
-			height = region.v2 - v;
-		}
+  /** Computes {@link Sequence.getUVs | UVs} for a mesh attachment.
+   * @param uvs Output array for the computed UVs, same length as regionUVs. */
+  static computeUVs(region: TextureRegion | null, regionUVs: NumberArrayLike, uvs: NumberArrayLike): void {
+    if (!region) throw new Error("Region not set.");
+    const n = uvs.length;
+    let u = region.u,
+      v = region.v,
+      width = 0,
+      height = 0;
+    if (region instanceof TextureAtlasRegion) {
+      const page = region.page;
+      const textureWidth = page.width,
+        textureHeight = page.height;
+      switch (region.degrees) {
+        case 90:
+          u -= (region.originalHeight - region.offsetY - region.height) / textureWidth;
+          v -= (region.originalWidth - region.offsetX - region.width) / textureHeight;
+          width = region.originalHeight / textureWidth;
+          height = region.originalWidth / textureHeight;
+          for (let i = 0; i < n; i += 2) {
+            uvs[i] = u + regionUVs[i + 1] * width;
+            uvs[i + 1] = v + (1 - regionUVs[i]) * height;
+          }
+          return;
+        case 180:
+          u -= (region.originalWidth - region.offsetX - region.width) / textureWidth;
+          v -= region.offsetY / textureHeight;
+          width = region.originalWidth / textureWidth;
+          height = region.originalHeight / textureHeight;
+          for (let i = 0; i < n; i += 2) {
+            uvs[i] = u + (1 - regionUVs[i]) * width;
+            uvs[i + 1] = v + (1 - regionUVs[i + 1]) * height;
+          }
+          return;
+        case 270:
+          u -= region.offsetY / textureWidth;
+          v -= region.offsetX / textureHeight;
+          width = region.originalHeight / textureWidth;
+          height = region.originalWidth / textureHeight;
+          for (let i = 0; i < n; i += 2) {
+            uvs[i] = u + (1 - regionUVs[i + 1]) * width;
+            uvs[i + 1] = v + regionUVs[i] * height;
+          }
+          return;
+        default:
+          u -= region.offsetX / textureWidth;
+          v -= (region.originalHeight - region.offsetY - region.height) / textureHeight;
+          width = region.originalWidth / textureWidth;
+          height = region.originalHeight / textureHeight;
+      }
+    } else if (!region) {
+      u = v = 0;
+      width = height = 1;
+    } else {
+      width = region.u2 - u;
+      height = region.v2 - v;
+    }
 
-		for (let i = 0; i < n; i += 2) {
-			uvs[i] = u + regionUVs[i] * width;
-			uvs[i + 1] = v + regionUVs[i + 1] * height;
-		}
-	}
+    for (let i = 0; i < n; i += 2) {
+      uvs[i] = u + regionUVs[i] * width;
+      uvs[i + 1] = v + regionUVs[i + 1] * height;
+    }
+  }
 }

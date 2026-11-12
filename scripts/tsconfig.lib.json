@@ -1,0 +1,9 @@
+{
+  "extends": "./tsconfig.base.json",
+  "compilerOptions": {
+    "tsBuildInfoFile": "../node_modules/.cache/tsconfig.lib.tsbuildinfo",
+    "lib": ["ES2022", "ES2025.Float16", "DOM", "DOM.Iterable"]
+  },
+  "include": ["../src", "../examples"],
+  "exclude": ["../**/*.test.ts"]
+}

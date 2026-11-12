@@ -22,7 +22,7 @@
     "dev": "vp dev --host 127.0.0.1",
     "build": "vp build",
     "preview": "vp preview --host 127.0.0.1",
-    "typecheck": "tsc --noEmit",
+    "typecheck": "tsc -b",
     "test": "vp test",
     "lint": "vp lint",
     "format": "vp fmt",
@@ -31,14 +31,15 @@
     "verify": "npm run check && npm test && npm run build"
   },
   "devDependencies": {
+    "@eliasku/ts-mangle": "^0.2.4",
     "@types/node": "^26.6.6",
     "ek3d": "^0.1.0",
     "typescript": "^7.0.2",
-    "vite": "npm:@voidzero-dev/vite-plus-core@1.5.0",
-    "vite-plus": "1.5.0"
+    "vite": "npm:@voidzero-dev/vite-plus-core@1.6.0",
+    "vite-plus": "1.6.0"
   },
   "overrides": {
-    "vite": "npm:@voidzero-dev/vite-plus-core@1.5.0"
+    "vite": "npm:@voidzero-dev/vite-plus-core@1.6.0"
   },
   "engines": {
     "node": "^22.22.2 || ^24.15.0 || >=26.0.0"

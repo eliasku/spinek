@@ -1,9 +1,11 @@
 import { readFileSync } from "node:fs";
 import { describe, expect, it } from "vite-plus/test";
+import { Animation, TranslateTimeline } from "spinek/core/Animation";
 import { AnimationState } from "spinek/core/AnimationState";
 import { AnimationStateData } from "spinek/core/AnimationStateData";
 import { AssetCache, AssetManagerBase } from "spinek/core/AssetManagerBase";
 import { AtlasAttachmentLoader } from "spinek/core/AtlasAttachmentLoader";
+import { BoundingBoxAttachment } from "spinek/core/attachments/BoundingBoxAttachment";
 import { MeshAttachment } from "spinek/core/attachments/MeshAttachment";
 import { RegionAttachment } from "spinek/core/attachments/RegionAttachment";
 import { Inherit } from "spinek/core/BoneData";
@@ -132,6 +134,85 @@ it.each([
     indices.push(skeleton.slots[0].pose.sequenceIndex);
   }
   expect(indices).toEqual(expected);
+});
+
+it("copies inherited weighted geometry while preserving deformation only for related attachments", () => {
+  const data = new SkeletonJson(loader()).readSkeletonData({
+    bones: [
+      { name: "root", x: 10, y: 20 },
+      { name: "child", parent: "root", x: 3, y: 4 },
+    ],
+    slots: [{ name: "slot", bone: "child" }],
+  });
+  const skeleton = new Skeleton(data);
+  skeleton.updateWorldTransform(Physics.update);
+  const slot = skeleton.slots[0];
+  const attachment = new BoundingBoxAttachment("hitbox");
+  attachment.bones = [2, 0, 1, 1, 1];
+  attachment.vertices = [2, 0, 0.25, 0, 2, 0.75, 4, 6, 1];
+  attachment.worldVerticesLength = 4;
+  slot.pose.setAttachment(attachment);
+  const expectWorldVertices = (attachment: BoundingBoxAttachment, expected: number[]) => {
+    const vertices: number[] = [];
+    attachment.computeWorldVertices(skeleton, slot, 0, attachment.worldVerticesLength, vertices, 0, 2);
+    expect(vertices).toHaveLength(expected.length);
+    for (const [index, value] of expected.entries()) expect(vertices[index]).toBeCloseTo(value, 6);
+  };
+  expectWorldVertices(attachment, [12.75, 24.5, 17, 30]);
+
+  slot.pose.deform.push(4, 0, 0, 4, 0, 0);
+  const copy = attachment.copy() as BoundingBoxAttachment;
+  slot.pose.setAttachment(copy);
+  expect(attachment.isTimelineActive(skeleton.slots, 0, false)).toBe(true);
+  expectWorldVertices(copy, [13.75, 27.5, 17, 30]);
+
+  copy.bones![1] = 1;
+  copy.vertices[0] = 6;
+  expectWorldVertices(copy, [15.5, 28.5, 17, 30]);
+  expectWorldVertices(attachment, [13.75, 27.5, 17, 30]);
+
+  const unrelated = new BoundingBoxAttachment("other");
+  unrelated.vertices = [1, 2];
+  unrelated.worldVerticesLength = 2;
+  slot.pose.setAttachment(unrelated);
+  expectWorldVertices(unrelated, [14, 26]);
+});
+
+it("applies independent inherited timeline frames and curves to a bone hierarchy", () => {
+  const data = new SkeletonJson(loader()).readSkeletonData({
+    bones: [
+      { name: "root", x: 10, y: 20 },
+      { name: "child", parent: "root", x: 3, y: 4 },
+    ],
+  });
+  const child = new TranslateTimeline(3, 0, 1);
+  child.setFrame(0, 0, 0, 0);
+  child.setFrame(1, 1, 8, -4);
+  child.setFrame(2, 2, 16, 4);
+  child.setStepped(1);
+  const root = new TranslateTimeline(2, 0, 0);
+  root.setFrame(0, 0, 0, 0);
+  root.setFrame(1, 2, 4, 8);
+  root.setStepped(0);
+  data.animations.push(new Animation("move", [root, child], child.getDuration()));
+  const skeleton = new Skeleton(data);
+  const untouched = new Skeleton(data);
+  const state = new AnimationState(new AnimationStateData(data));
+  state.setAnimation(0, "move", false);
+  for (const [delta, x, y] of [
+    [0.5, 17, 22],
+    [1, 21, 20],
+    [0.5, 33, 36],
+  ] as const) {
+    state.update(delta);
+    state.apply(skeleton);
+    skeleton.updateWorldTransform(Physics.update);
+    expect(skeleton.bones[1].appliedPose.worldX).toBeCloseTo(x, 6);
+    expect(skeleton.bones[1].appliedPose.worldY).toBeCloseTo(y, 6);
+  }
+  untouched.updateWorldTransform(Physics.update);
+  expect(untouched.bones[1].appliedPose.worldX).toBeCloseTo(13, 6);
+  expect(untouched.bones[1].appliedPose.worldY).toBeCloseTo(24, 6);
 });
 
 describe.each(["json", "binary"] as const)("spineboy %s", (format) => {

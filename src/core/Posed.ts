@@ -6,58 +6,55 @@ import type { PosedData } from "./PosedData.js";
  * - {@link pose}: The unconstrained pose. Set by animations and application code.
  * - {@link appliedPose}: The pose to use for rendering. Possibly modified by constraints.
  */
-export abstract class Posed<
-	D extends PosedData<P>,
-	P extends Pose<P>> {
+export abstract class Posed<D extends PosedData<P>, P extends Pose<P>> {
+  /** The constraint's setup pose data. */
+  readonly data: D;
+  readonly pose: P;
+  readonly constrainedPose: P;
+  appliedPose: P;
 
-	/** The constraint's setup pose data. */
-	readonly data: D;
-	readonly pose: P;
-	readonly constrainedPose: P;
-	appliedPose: P;
+  constructor(data: D, pose: P, constrainedPose: P) {
+    if (data == null) throw new Error("data cannot be null.");
+    this.data = data;
+    this.pose = pose;
+    this.constrainedPose = constrainedPose;
+    this.appliedPose = pose;
+  }
 
-	constructor (data: D, pose: P, constrainedPose: P) {
-		if (data == null) throw new Error("data cannot be null.");
-		this.data = data;
-		this.pose = pose;
-		this.constrainedPose = constrainedPose;
-		this.appliedPose = pose;
-	}
+  /** Sets the unconstrained pose to the setup pose. */
+  public setupPose(): void {
+    this.pose.set(this.data.setupPose);
+  }
 
-	/** Sets the unconstrained pose to the setup pose. */
-	public setupPose (): void {
-		this.pose.set(this.data.setupPose);
-	}
+  /** The setup pose data. May be shared with multiple instances. */
+  public getData(): D {
+    return this.data;
+  }
 
-	/** The setup pose data. May be shared with multiple instances. */
-	public getData (): D {
-		return this.data;
-	}
+  /** The unconstrained pose for this object, set by animations and application code. */
+  public getPose(): P {
+    return this.pose;
+  }
 
-	/** The unconstrained pose for this object, set by animations and application code. */
-	public getPose (): P {
-		return this.pose;
-	}
+  /** The pose to use for rendering. If no constraints modify this pose, this is the same as {@link pose}. Otherwise it is a
+   * copy of {@link pose} modified by constraints. */
+  public getAppliedPose(): P {
+    return this.appliedPose;
+  }
 
-	/** The pose to use for rendering. If no constraints modify this pose, this is the same as {@link pose}. Otherwise it is a
-	 * copy of {@link pose} modified by constraints. */
-	public getAppliedPose (): P {
-		return this.appliedPose;
-	}
+  /** Sets the applied pose to the unconstrained pose, for when no constraints will modify the pose. */
+  unconstrained() {
+    this.appliedPose = this.pose;
+  }
 
-	/** Sets the applied pose to the unconstrained pose, for when no constraints will modify the pose. */
-	unconstrained () {
-		this.appliedPose = this.pose;
-	}
+  /** Sets the applied pose to the constrained pose, in anticipation of the applied pose being modified by constraints. */
+  constrained() {
+    this.appliedPose = this.constrainedPose;
+  }
 
-	/** Sets the applied pose to the constrained pose, in anticipation of the applied pose being modified by constraints. */
-	constrained () {
-		this.appliedPose = this.constrainedPose;
-	}
-
-	/** Sets the constrained pose to the unconstrained pose, as a starting point for constraints to be applied. */
-	resetConstrained () { // Port: resetConstrained - reference runtime:  reset()
-		this.constrainedPose.set(this.pose);
-	}
-
+  /** Sets the constrained pose to the unconstrained pose, as a starting point for constraints to be applied. */
+  resetConstrained() {
+    // Port: resetConstrained - reference runtime:  reset()
+    this.constrainedPose.set(this.pose);
+  }
 }
