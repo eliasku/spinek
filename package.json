@@ -28,7 +28,8 @@
     "format": "vp fmt",
     "format:check": "vp fmt --check",
     "check": "npm run lint && npm run typecheck",
-    "verify": "npm run check && npm test && npm run build"
+    "verify": "npm run check && npm test && npm run build",
+    "release": "node scripts/release.mjs"
   },
   "devDependencies": {
     "@eliasku/ts-mangle": "^0.2.4",

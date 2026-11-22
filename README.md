@@ -66,6 +66,15 @@ TypeScript configurations live in `scripts/`: `tsconfig.base.json` provides shar
 
 Vite explicitly uses `scripts/tsconfig.lib.json`. Its `ES2025.Float16` types support ek3d's optional `Float16Array` usage without exposing Node.js globals to browser code; the compilation target remains ES2022.
 
+## Releases
+
+Push the release notes on the default branch and run `npm run release` from a clean checkout.
+It pushes the annotated `v<version>` tag, then updates the changelog and both npm manifests in a local `next version` patch commit. Push that commit separately.
+
+Before the first tag, create the GitHub environment `npm` and allow only deployment tags matching `v*`. Restrict who can create or move release tags.
+In [npm Trusted Publishing](https://docs.npmjs.com/trusted-publishers/), authorize `eliasku/spinek`, workflow file `publish.yml`, environment `npm`, with direct `npm publish` allowed. No npm write token is needed.
+The tag workflow type-checks, tests, and builds before publishing the packed artifact. If publishing fails due to configuration, fix it and rerun the tagged workflow rather than moving the tag.
+
 ## Upstream
 
 The port was checked against the Spine 4.3 TypeScript runtimes (4.3.13) at [`d913caab6`](https://github.com/EsotericSoftware/spine-runtimes/commit/d913caab6ead0a4c9165548bb9dfa4bd35cdd331).
