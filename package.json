@@ -1,6 +1,6 @@
 {
   "name": "spinek",
-  "version": "0.1.0",
+  "version": "0.1.1",
   "description": "TypeScript Spine 4.3 runtime with WebGL, Canvas and ek3d renderers",
   "license": "LicenseRef-Spine-Runtimes",
   "author": "Ilya Kuzmichev <eliasku.games@gmail.com>",
@@ -38,13 +38,6 @@
     "vite": "npm:@voidzero-dev/vite-plus-core@8.3.8000",
     "vite-plus": "1.7.0"
   },
-  "overrides": {
-    "vite": "npm:@voidzero-dev/vite-plus-core@8.3.8000"
-  },
-  "engines": {
-    "node": "^22.22.2 || ^24.15.0 || >=26.0.0"
-  },
-  "packageManager": "npm@12.2.2",
   "peerDependencies": {
     "ek3d": "^0.1.0"
   },
@@ -52,5 +45,12 @@
     "ek3d": {
       "optional": true
     }
-  }
+  },
+  "overrides": {
+    "vite": "npm:@voidzero-dev/vite-plus-core@8.3.8000"
+  },
+  "engines": {
+    "node": "^22.22.2 || ^24.15.0 || >=26.0.0"
+  },
+  "packageManager": "npm@12.2.2"
 }
