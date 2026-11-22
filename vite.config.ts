@@ -2,7 +2,7 @@ import { defineConfig } from "vite-plus";
 
 export default defineConfig(({ command }) => ({
   base: "./",
-  tsconfig: "./scripts/tsconfig.lib.json",
+  tsconfig: "./tools/tsconfig.lib.json",
   build: {
     rolldownOptions: {
       input: ["index.html", "examples/webgl.html", "examples/canvas.html", "examples/ek3d.html"],

@@ -62,9 +62,9 @@ The npm package does not include the examples or their assets; use the repositor
 
 Formatting remains a separate `npm run format:check` command; the existing source formatting baseline is not clean.
 
-TypeScript configurations live in `scripts/`: `tsconfig.base.json` provides shared options; `tsconfig.test.json`, `tsconfig.node.json`, and `tsconfig.lib.json` cover Vitest tests, Node.js scripts/configs, and browser library sources/examples. The root `tsconfig.json` only lists project references. `npm run typecheck` runs `tsc -b`, with build metadata stored in `node_modules/.cache/`.
+TypeScript configurations live in `tools/`: `tsconfig.base.json` provides shared options; `tsconfig.test.json`, `tsconfig.node.json`, and `tsconfig.lib.json` cover Vitest tests, Node.js scripts/configs, and browser library sources/examples. The root `tsconfig.json` only lists project references. `npm run typecheck` runs `tsc -b`, with build metadata stored in `node_modules/.cache/`.
 
-Vite explicitly uses `scripts/tsconfig.lib.json`. Its `ES2025.Float16` types support ek3d's optional `Float16Array` usage without exposing Node.js globals to browser code; the compilation target remains ES2022.
+Vite explicitly uses `tools/tsconfig.lib.json`. Its `ES2025.Float16` types support ek3d's optional `Float16Array` usage without exposing Node.js globals to browser code; the compilation target remains ES2022.
 
 ## Releases
 
