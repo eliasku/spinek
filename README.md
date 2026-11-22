@@ -66,6 +66,13 @@ TypeScript configurations live in `scripts/`: `tsconfig.base.json` provides shar
 
 Vite explicitly uses `scripts/tsconfig.lib.json`. Its `ES2025.Float16` types support ek3d's optional `Float16Array` usage without exposing Node.js globals to browser code; the compilation target remains ES2022.
 
+## Upstream
+
+The port was checked against the Spine 4.3 TypeScript runtimes (4.3.13) at [`d913caab6`](https://github.com/EsotericSoftware/spine-runtimes/commit/d913caab6ead0a4c9165548bb9dfa4bd35cdd331).
+Use `upstream/spine-runtimes/spine-ts/` as the local reference. The checkout is ignored by Git and is not needed to build spinek.
+
+Compare `spine-core`, `spine-canvas`, and `spine-webgl` with the corresponding directories in `src/`. Use `spine-threejs` only as a behavioral reference for the native `src/ek3d` adapter.
+
 ## License
 
 The runtime and bundled Spineboy example assets are covered by the [Spine Runtimes License Agreement](./LICENSE). See it for Spine Editor licensing requirements and redistribution obligations. The example asset license is also included in [public/assets/LICENSE](./public/assets/LICENSE).
