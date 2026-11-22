@@ -4,6 +4,17 @@ TypeScript port of the **Spine 4.3** runtime, with a standalone core, WebGL and 
 
 ## Installation
 
+```sh
+npm install spinek
+```
+
+spinek ships TypeScript source. Use a bundler that processes TypeScript dependencies.
+The core, WebGL and Canvas 2D modules do not need ek3d. For `spinek/ek3d/*`, install both packages:
+
+```sh
+npm install spinek ek3d
+```
+
 ## Usage
 
 Import individual modules without a file extension. There is no root entry point or barrel export:
@@ -31,7 +42,7 @@ See the complete examples for asset loading, animation updates, rendering and re
 
 ## Run the examples
 
-Requires Node.js `^22.22.2 || ^24.15.0 || >=26.0.0` and npm 12.2.2. Vite+ is pinned to 1.5.0. In the repository directory:
+Requires Node.js `^22.22.2 || ^24.15.0 || >=26.0.0` and npm 12.2.2. Vite+ is pinned to 1.7.0. In the repository directory:
 
 ```sh
 npm ci
