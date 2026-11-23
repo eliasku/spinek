@@ -1,6 +1,6 @@
 {
   "name": "spinek",
-  "version": "0.1.1",
+  "version": "0.1.2",
   "description": "TypeScript Spine 4.3 runtime with WebGL, Canvas and ek3d renderers",
   "license": "LicenseRef-Spine-Runtimes",
   "author": "Ilya Kuzmichev <eliasku.games@gmail.com>",
