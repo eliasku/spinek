@@ -1,4 +1,4 @@
-import { Event } from "./Event.js";
+import { Event } from "./Event";
 
 /** Stores the setup pose values for an {@link Event}.
  *

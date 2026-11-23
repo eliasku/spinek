@@ -1,6 +1,6 @@
-import type { Texture } from "./Texture.js";
-import { TextureAtlas } from "./TextureAtlas.js";
-import type { Disposable, StringMap } from "./Utils.js";
+import type { Texture } from "./Texture";
+import { TextureAtlas } from "./TextureAtlas";
+import type { Disposable, StringMap } from "./Utils";
 
 type AssetData = (Uint8Array | string | Texture | TextureAtlas | object) & Partial<Disposable>;
 type AssetCallback<T extends AssetData> = (path: string, data: T) => void;

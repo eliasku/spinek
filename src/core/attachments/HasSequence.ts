@@ -1,5 +1,5 @@
-import type { Color } from "../Utils.js";
-import type { Sequence } from "./Sequence.js";
+import type { Color } from "../Utils";
+import type { Sequence } from "./Sequence";
 
 /** Interface for an attachment that gets 1 or more texture regions from a {@link Sequence}. */
 export interface HasSequence {

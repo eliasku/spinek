@@ -1,5 +1,5 @@
-import { Color, Utils } from "../Utils.js";
-import { type Attachment, VertexAttachment } from "./Attachment.js";
+import { Color, Utils } from "../Utils";
+import { type Attachment, VertexAttachment } from "./Attachment";
 
 /** An attachment whose vertices make up a composite Bezier curve.
  *

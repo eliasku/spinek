@@ -1,4 +1,4 @@
-import { Texture, type TextureFilter, type TextureWrap } from "../core/Texture.js";
+import { Texture, type TextureFilter, type TextureWrap } from "../core/Texture";
 
 export class CanvasTexture extends Texture {
   constructor(image: HTMLImageElement | ImageBitmap) {

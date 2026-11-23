@@ -1,10 +1,10 @@
-import { BlendMode } from "../core/SlotData.js";
-import { Color } from "../core/Utils.js";
-import { RegionAttachment } from "../core/attachments/RegionAttachment.js";
-import { type Skeleton } from "../core/Skeleton.js";
-import { SkeletonRendererCore } from "../core/SkeletonRendererCore.js";
-import { type TextureRegion } from "../core/Texture.js";
-import type { CanvasTexture } from "./CanvasTexture.js";
+import { BlendMode } from "../core/SlotData";
+import { Color } from "../core/Utils";
+import { RegionAttachment } from "../core/attachments/RegionAttachment";
+import { type Skeleton } from "../core/Skeleton";
+import { SkeletonRendererCore } from "../core/SkeletonRendererCore";
+import { type TextureRegion } from "../core/Texture";
+import type { CanvasTexture } from "./CanvasTexture";
 
 // Use Canvas2D's closest native compositing equivalents. These may not be pixel-identical to WebGL on transparent destinations.
 function blendModeToCompositeOperation(blendMode: BlendMode): GlobalCompositeOperation {

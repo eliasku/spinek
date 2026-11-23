@@ -1,4 +1,4 @@
-import type { Pose } from "./Pose.js";
+import type { Pose } from "./Pose";
 
 /** Stores a pose for a path constraint. */
 export class PathConstraintPose implements Pose<PathConstraintPose> {

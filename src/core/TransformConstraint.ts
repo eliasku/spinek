@@ -1,11 +1,11 @@
-import type { Bone } from "./Bone.js";
-import type { BonePose } from "./BonePose.js";
-import { Constraint } from "./Constraint.js";
-import type { Physics } from "./Physics.js";
-import type { Skeleton } from "./Skeleton.js";
-import type { TransformConstraintData } from "./TransformConstraintData.js";
-import { TransformConstraintPose } from "./TransformConstraintPose.js";
-import { MathUtils } from "./Utils.js";
+import type { Bone } from "./Bone";
+import type { BonePose } from "./BonePose";
+import { Constraint } from "./Constraint";
+import type { Physics } from "./Physics";
+import type { Skeleton } from "./Skeleton";
+import type { TransformConstraintData } from "./TransformConstraintData";
+import { TransformConstraintPose } from "./TransformConstraintPose";
+import { MathUtils } from "./Utils";
 
 /** Adjusts the world transform of the constrained bones to match that of the source bone.
  *

@@ -1,6 +1,6 @@
-import { AssetManagerBase, Downloader } from "../core/AssetManagerBase.js";
-import { GLTexture } from "./GLTexture.js";
-import type { ManagedWebGLRenderingContext } from "./WebGL.js";
+import { AssetManagerBase, Downloader } from "../core/AssetManagerBase";
+import { GLTexture } from "./GLTexture";
+import type { ManagedWebGLRenderingContext } from "./WebGL";
 
 export class AssetManager extends AssetManagerBase {
   constructor(

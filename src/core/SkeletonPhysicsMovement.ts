@@ -1,4 +1,4 @@
-import type { Skeleton } from "./Skeleton.js";
+import type { Skeleton } from "./Skeleton";
 
 /** A host runtime object's world position and rotation used for skeleton physics movement inheritance. */
 export interface SkeletonPhysicsMovementTransform {

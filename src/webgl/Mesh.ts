@@ -1,6 +1,6 @@
-import { type Disposable, type Restorable } from "../core/Utils.js";
-import { Shader } from "./Shader.js";
-import { ManagedWebGLRenderingContext } from "./WebGL.js";
+import { type Disposable, type Restorable } from "../core/Utils";
+import { Shader } from "./Shader";
+import { ManagedWebGLRenderingContext } from "./WebGL";
 
 export class Mesh implements Disposable, Restorable {
   private context: ManagedWebGLRenderingContext;

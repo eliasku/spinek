@@ -1,13 +1,13 @@
-import { BlendMode } from "../core/SlotData.js";
-import { ClippingAttachment } from "../core/attachments/ClippingAttachment.js";
-import { Color, type NumberArrayLike, Utils } from "../core/Utils.js";
-import { MeshAttachment } from "../core/attachments/MeshAttachment.js";
-import { RegionAttachment } from "../core/attachments/RegionAttachment.js";
-import { type Skeleton } from "../core/Skeleton.js";
-import { SkeletonClipping } from "../core/SkeletonClipping.js";
-import type { GLTexture } from "./GLTexture.js";
-import type { PolygonBatcher } from "./PolygonBatcher.js";
-import type { ManagedWebGLRenderingContext } from "./WebGL.js";
+import { BlendMode } from "../core/SlotData";
+import { ClippingAttachment } from "../core/attachments/ClippingAttachment";
+import { Color, type NumberArrayLike, Utils } from "../core/Utils";
+import { MeshAttachment } from "../core/attachments/MeshAttachment";
+import { RegionAttachment } from "../core/attachments/RegionAttachment";
+import { type Skeleton } from "../core/Skeleton";
+import { SkeletonClipping } from "../core/SkeletonClipping";
+import type { GLTexture } from "./GLTexture";
+import type { PolygonBatcher } from "./PolygonBatcher";
+import type { ManagedWebGLRenderingContext } from "./WebGL";
 
 class Renderable {
   constructor(

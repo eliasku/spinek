@@ -16,7 +16,7 @@ import {
   M32,
   M33,
   type Matrix4,
-} from "./Matrix4.js";
+} from "./Matrix4";
 
 export class Vector3 {
   x = 0;

@@ -1,7 +1,7 @@
-import type { Constraint } from "./Constraint.js";
-import type { Pose } from "./Pose.js";
-import { PosedData } from "./PosedData.js";
-import type { Skeleton } from "./Skeleton.js";
+import type { Constraint } from "./Constraint";
+import type { Pose } from "./Pose";
+import { PosedData } from "./PosedData";
+import type { Skeleton } from "./Skeleton";
 
 /** The base class for all constraint datas. */
 export abstract class ConstraintData<

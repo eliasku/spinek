@@ -1,6 +1,6 @@
-import type { Animation } from "./Animation.js";
-import type { SkeletonData } from "./SkeletonData.js";
-import type { StringMap } from "./Utils.js";
+import type { Animation } from "./Animation";
+import type { SkeletonData } from "./SkeletonData";
+import type { StringMap } from "./Utils";
 
 /** Stores mix (crossfade) durations to be applied when {@link AnimationState} animations are changed on the same track. */
 export class AnimationStateData {

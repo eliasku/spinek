@@ -1,4 +1,4 @@
-import type { Bone } from "./Bone.js";
+import type { Bone } from "./Bone";
 
 /** Converts points between Spine skeleton coordinates and host runtime game coordinates. */
 export interface SkeletonCoordinateConverter {

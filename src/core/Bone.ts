@@ -1,6 +1,6 @@
-import type { BoneData } from "./BoneData.js";
-import { BonePose } from "./BonePose.js";
-import { PosedActive } from "./PosedActive.js";
+import type { BoneData } from "./BoneData";
+import { BonePose } from "./BonePose";
+import { PosedActive } from "./PosedActive";
 
 /** A node in a skeleton's hierarchy with a transform that affects its children and their attachments. A bone has a number of
  * poses:

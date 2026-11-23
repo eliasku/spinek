@@ -1,7 +1,7 @@
-import type { Attachment } from "./attachments/Attachment.js";
-import { VertexAttachment } from "./attachments/Attachment.js";
-import type { Pose } from "./Pose.js";
-import { Color } from "./Utils.js";
+import type { Attachment } from "./attachments/Attachment";
+import { VertexAttachment } from "./attachments/Attachment";
+import type { Pose } from "./Pose";
+import { Color } from "./Utils";
 
 /** Stores a slot's pose. */
 export class SlotPose implements Pose<SlotPose> {

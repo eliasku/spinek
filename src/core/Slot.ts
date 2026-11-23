@@ -1,9 +1,9 @@
-import type { Bone } from "./Bone.js";
-import { Posed } from "./Posed.js";
-import type { Skeleton } from "./Skeleton.js";
-import type { SlotData } from "./SlotData.js";
-import { SlotPose } from "./SlotPose.js";
-import { Color } from "./Utils.js";
+import type { Bone } from "./Bone";
+import { Posed } from "./Posed";
+import type { Skeleton } from "./Skeleton";
+import type { SlotData } from "./SlotData";
+import { SlotPose } from "./SlotPose";
+import { Color } from "./Utils";
 
 /** Organizes attachments for {@link Skeleton.drawOrder} purposes and provide a place to store state for an attachment.
  *

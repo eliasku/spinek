@@ -1,6 +1,6 @@
-import type { OrthoCamera } from "./Camera.js";
-import { Input } from "./Input.js";
-import { Vector3 } from "./Vector3.js";
+import type { OrthoCamera } from "./Camera";
+import { Input } from "./Input";
+import { Vector3 } from "./Vector3";
 
 export class CameraController {
   constructor(

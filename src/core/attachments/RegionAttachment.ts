@@ -1,10 +1,10 @@
-import type { SlotPose } from "../SlotPose.js";
-import type { Slot } from "../Slot.js";
-import type { TextureRegion } from "../Texture.js";
-import { Color, MathUtils, type NumberArrayLike } from "../Utils.js";
-import { Attachment } from "./Attachment.js";
-import type { HasSequence } from "./HasSequence.js";
-import type { Sequence } from "./Sequence.js";
+import type { SlotPose } from "../SlotPose";
+import type { Slot } from "../Slot";
+import type { TextureRegion } from "../Texture";
+import { Color, MathUtils, type NumberArrayLike } from "../Utils";
+import { Attachment } from "./Attachment";
+import type { HasSequence } from "./HasSequence";
+import type { Sequence } from "./Sequence";
 
 /** An attachment that displays a textured quadrilateral.
  *

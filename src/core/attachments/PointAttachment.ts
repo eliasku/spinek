@@ -1,6 +1,6 @@
-import type { BonePose } from "../BonePose.js";
-import { Color, MathUtils, type Vector2 } from "../Utils.js";
-import { type Attachment, VertexAttachment } from "./Attachment.js";
+import type { BonePose } from "../BonePose";
+import { Color, MathUtils, type Vector2 } from "../Utils";
+import { type Attachment, VertexAttachment } from "./Attachment";
 
 /** An attachment which is a single point and a rotation. This can be used to spawn projectiles, particles, etc. A bone can be
  * used in similar ways, but a PointAttachment is slightly less expensive to compute and can be hidden, shown, and placed in a

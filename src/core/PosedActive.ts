@@ -1,6 +1,6 @@
-import type { Pose } from "./Pose.js";
-import { Posed } from "./Posed.js";
-import type { PosedData } from "./PosedData.js";
+import type { Pose } from "./Pose";
+import { Posed } from "./Posed";
+import type { PosedData } from "./PosedData";
 
 /** A posed object that may be active or inactive. */
 export abstract class PosedActive<D extends PosedData<P>, P extends Pose<P>> extends Posed<D, P> {

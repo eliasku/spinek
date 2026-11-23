@@ -1,6 +1,6 @@
-import type { BoneData } from "./BoneData.js";
-import { PosedData } from "./PosedData.js";
-import { SlotPose } from "./SlotPose.js";
+import type { BoneData } from "./BoneData";
+import { PosedData } from "./PosedData";
+import { SlotPose } from "./SlotPose";
 
 /** Stores the setup pose for a {@link Slot}. */
 export class SlotData extends PosedData<SlotPose> {

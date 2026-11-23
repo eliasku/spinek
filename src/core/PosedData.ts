@@ -1,4 +1,4 @@
-import type { Pose } from "./Pose.js";
+import type { Pose } from "./Pose";
 
 /** The base class for storing setup data for a posed object. May be shared with multiple instances. */
 export abstract class PosedData<P extends Pose<P>> {

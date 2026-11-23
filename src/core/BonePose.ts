@@ -1,10 +1,10 @@
-import type { Bone } from "./Bone.js";
-import { Inherit } from "./BoneData.js";
-import type { Physics } from "./Physics.js";
-import type { Pose } from "./Pose.js";
-import type { Skeleton } from "./Skeleton.js";
-import type { Update } from "./Update.js";
-import { MathUtils, type Vector2 } from "./Utils.js";
+import type { Bone } from "./Bone";
+import { Inherit } from "./BoneData";
+import type { Physics } from "./Physics";
+import type { Pose } from "./Pose";
+import type { Skeleton } from "./Skeleton";
+import type { Update } from "./Update";
+import { MathUtils, type Vector2 } from "./Utils";
 
 /** The applied local pose and world transform for a bone. This is the {@link Bone.getPose} with constraints applied and the
  * world transform computed by {@link Skeleton.updateWorldTransform} and {@link updateWorldTransform}.

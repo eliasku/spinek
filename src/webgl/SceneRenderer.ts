@@ -1,14 +1,14 @@
-import { Color, type Disposable, MathUtils } from "../core/Utils.js";
-import { type Skeleton } from "../core/Skeleton.js";
-import { type TextureAtlasRegion } from "../core/TextureAtlas.js";
-import { OrthoCamera } from "./Camera.js";
-import type { GLTexture } from "./GLTexture.js";
-import { PolygonBatcher } from "./PolygonBatcher.js";
-import { Shader } from "./Shader.js";
-import { ShapeRenderer } from "./ShapeRenderer.js";
-import { SkeletonDebugRenderer } from "./SkeletonDebugRenderer.js";
-import { SkeletonRenderer, type VertexTransformer } from "./SkeletonRenderer.js";
-import { ManagedWebGLRenderingContext } from "./WebGL.js";
+import { Color, type Disposable, MathUtils } from "../core/Utils";
+import { type Skeleton } from "../core/Skeleton";
+import { type TextureAtlasRegion } from "../core/TextureAtlas";
+import { OrthoCamera } from "./Camera";
+import type { GLTexture } from "./GLTexture";
+import { PolygonBatcher } from "./PolygonBatcher";
+import { Shader } from "./Shader";
+import { ShapeRenderer } from "./ShapeRenderer";
+import { SkeletonDebugRenderer } from "./SkeletonDebugRenderer";
+import { SkeletonRenderer, type VertexTransformer } from "./SkeletonRenderer";
+import { ManagedWebGLRenderingContext } from "./WebGL";
 
 const quad = [0, 0, 1, 1, 1, 1, 0, 0, 0, 0, 1, 1, 1, 1, 0, 0, 0, 0, 1, 1, 1, 1, 0, 0, 0, 0, 1, 1, 1, 1, 0, 0];
 const QUAD_TRIANGLES = [0, 1, 2, 2, 3, 0];

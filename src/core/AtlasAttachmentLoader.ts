@@ -1,13 +1,13 @@
-import type { AttachmentLoader } from "./attachments/AttachmentLoader.js";
-import { BoundingBoxAttachment } from "./attachments/BoundingBoxAttachment.js";
-import { ClippingAttachment } from "./attachments/ClippingAttachment.js";
-import { MeshAttachment } from "./attachments/MeshAttachment.js";
-import { PathAttachment } from "./attachments/PathAttachment.js";
-import { PointAttachment } from "./attachments/PointAttachment.js";
-import { RegionAttachment } from "./attachments/RegionAttachment.js";
-import type { Sequence } from "./attachments/Sequence.js";
-import type { Skin } from "./Skin.js";
-import type { TextureAtlas } from "./TextureAtlas.js";
+import type { AttachmentLoader } from "./attachments/AttachmentLoader";
+import { BoundingBoxAttachment } from "./attachments/BoundingBoxAttachment";
+import { ClippingAttachment } from "./attachments/ClippingAttachment";
+import { MeshAttachment } from "./attachments/MeshAttachment";
+import { PathAttachment } from "./attachments/PathAttachment";
+import { PointAttachment } from "./attachments/PointAttachment";
+import { RegionAttachment } from "./attachments/RegionAttachment";
+import type { Sequence } from "./attachments/Sequence";
+import type { Skin } from "./Skin";
+import type { TextureAtlas } from "./TextureAtlas";
 
 /** An {@link AttachmentLoader} that configures attachments using texture regions from an {@link TextureAtlas}.
  *

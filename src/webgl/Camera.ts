@@ -1,5 +1,5 @@
-import { Matrix4 } from "./Matrix4.js";
-import { Vector3 } from "./Vector3.js";
+import { Matrix4 } from "./Matrix4";
+import { Vector3 } from "./Vector3";
 
 export class OrthoCamera {
   position = new Vector3(0, 0, 0);

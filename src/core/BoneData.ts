@@ -1,6 +1,6 @@
-import { BonePose } from "./BonePose.js";
-import { PosedData } from "./PosedData.js";
-import { Color } from "./Utils.js";
+import { BonePose } from "./BonePose";
+import { PosedData } from "./PosedData";
+import { Color } from "./Utils";
 
 /** The setup pose for a bone. */
 export class BoneData extends PosedData<BonePose> {

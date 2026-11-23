@@ -1,7 +1,7 @@
-import { BlendMode } from "../core/SlotData.js";
-import { Color, type Disposable, TimeKeeper } from "../core/Utils.js";
-import { GLTexture } from "./GLTexture.js";
-import { ResizeMode, type SceneRenderer } from "./SceneRenderer.js";
+import { BlendMode } from "../core/SlotData";
+import { Color, type Disposable, TimeKeeper } from "../core/Utils";
+import { GLTexture } from "./GLTexture";
+import { ResizeMode, type SceneRenderer } from "./SceneRenderer";
 
 let spinnerImage: HTMLImageElement;
 let logoImage: HTMLImageElement;

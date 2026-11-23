@@ -1,10 +1,10 @@
-import type { Animation } from "./Animation.js";
-import type { BoneData } from "./BoneData.js";
-import type { ConstraintData } from "./ConstraintData.js";
-import type { EventData } from "./EventData.js";
-import type { Skin } from "./Skin.js";
-import { SliderData } from "./SliderData.js";
-import type { SlotData } from "./SlotData.js";
+import type { Animation } from "./Animation";
+import type { BoneData } from "./BoneData";
+import type { ConstraintData } from "./ConstraintData";
+import type { EventData } from "./EventData";
+import type { Skin } from "./Skin";
+import { SliderData } from "./SliderData";
+import type { SlotData } from "./SlotData";
 
 /** Stores the setup pose and all of the stateless data for a skeleton.
  *

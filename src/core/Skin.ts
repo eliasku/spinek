@@ -1,9 +1,9 @@
-import type { Attachment } from "./attachments/Attachment.js";
-import { MeshAttachment } from "./attachments/MeshAttachment.js";
-import type { BoneData } from "./BoneData.js";
-import type { ConstraintData } from "./ConstraintData.js";
-import type { Skeleton } from "./Skeleton.js";
-import { Color, type StringMap } from "./Utils.js";
+import type { Attachment } from "./attachments/Attachment";
+import { MeshAttachment } from "./attachments/MeshAttachment";
+import type { BoneData } from "./BoneData";
+import type { ConstraintData } from "./ConstraintData";
+import type { Skeleton } from "./Skeleton";
+import { Color, type StringMap } from "./Utils";
 
 /** Stores an entry in the skin consisting of the slot index, name, and attachment **/
 export class SkinEntry {

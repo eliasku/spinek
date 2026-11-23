@@ -1,8 +1,8 @@
-import type { ClippingAttachment } from "./attachments/ClippingAttachment.js";
-import type { Skeleton } from "./Skeleton.js";
-import type { Slot } from "./Slot.js";
-import { Triangulator } from "./Triangulator.js";
-import { type Color, type NumberArrayLike, Utils } from "./Utils.js";
+import type { ClippingAttachment } from "./attachments/ClippingAttachment";
+import type { Skeleton } from "./Skeleton";
+import type { Slot } from "./Slot";
+import { Triangulator } from "./Triangulator";
+import { type Color, type NumberArrayLike, Utils } from "./Utils";
 
 export class SkeletonClipping {
   private triangulator: Triangulator | null = null;

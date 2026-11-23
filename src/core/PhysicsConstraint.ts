@@ -1,11 +1,11 @@
-import type { BonePose } from "./BonePose.js";
-import { Constraint } from "./Constraint.js";
-import { ScaleYMode } from "./ConstraintData.js";
-import { Physics } from "./Physics.js";
-import type { PhysicsConstraintData } from "./PhysicsConstraintData.js";
-import { PhysicsConstraintPose } from "./PhysicsConstraintPose.js";
-import { Skeleton } from "./Skeleton.js";
-import { MathUtils } from "./Utils.js";
+import type { BonePose } from "./BonePose";
+import { Constraint } from "./Constraint";
+import { ScaleYMode } from "./ConstraintData";
+import { Physics } from "./Physics";
+import type { PhysicsConstraintData } from "./PhysicsConstraintData";
+import { PhysicsConstraintPose } from "./PhysicsConstraintPose";
+import { Skeleton } from "./Skeleton";
+import { MathUtils } from "./Utils";
 
 /** Applies physics to a bone.
  *

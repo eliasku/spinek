@@ -1,9 +1,9 @@
-import type { TextureRegion } from "../Texture.js";
-import { TextureAtlasRegion } from "../TextureAtlas.js";
-import { Color, type NumberArrayLike, Utils } from "../Utils.js";
-import { VertexAttachment } from "./Attachment.js";
-import type { HasSequence } from "./HasSequence.js";
-import type { Sequence } from "./Sequence.js";
+import type { TextureRegion } from "../Texture";
+import { TextureAtlasRegion } from "../TextureAtlas";
+import { Color, type NumberArrayLike, Utils } from "../Utils";
+import { VertexAttachment } from "./Attachment";
+import type { HasSequence } from "./HasSequence";
+import type { Sequence } from "./Sequence";
 
 /** An attachment that displays a textured mesh. A mesh has hull vertices and internal vertices within the hull. Holes are not
  * supported. Each vertex has UVs (texture coordinates) and triangles that are used to map an image on to the mesh.

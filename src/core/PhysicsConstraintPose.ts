@@ -1,4 +1,4 @@
-import type { Pose } from "./Pose.js";
+import type { Pose } from "./Pose";
 
 /** Stores a pose for a physics constraint. */
 export class PhysicsConstraintPose implements Pose<PhysicsConstraintPose> {

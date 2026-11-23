@@ -5,13 +5,13 @@ import {
   isSlotTimeline,
   MixFrom,
   PhysicsConstraintTimeline,
-} from "./Animation.js";
-import type { Bone } from "./Bone.js";
-import { Constraint } from "./Constraint.js";
-import type { Physics } from "./Physics.js";
-import type { Skeleton } from "./Skeleton.js";
-import type { SliderData } from "./SliderData.js";
-import { SliderPose } from "./SliderPose.js";
+} from "./Animation";
+import type { Bone } from "./Bone";
+import { Constraint } from "./Constraint";
+import type { Physics } from "./Physics";
+import type { Skeleton } from "./Skeleton";
+import type { SliderData } from "./SliderData";
+import { SliderPose } from "./SliderPose";
 
 const _offsets = [0, 0, 0, 0, 0, 0];
 

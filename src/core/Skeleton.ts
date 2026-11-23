@@ -1,18 +1,18 @@
-import type { Attachment } from "./attachments/Attachment.js";
-import { ClippingAttachment } from "./attachments/ClippingAttachment.js";
-import { MeshAttachment } from "./attachments/MeshAttachment.js";
-import { RegionAttachment } from "./attachments/RegionAttachment.js";
-import { Bone } from "./Bone.js";
-import type { Constraint } from "./Constraint.js";
-import { DrawOrder } from "./DrawOrder.js";
-import type { Physics } from "./Physics.js";
-import { PhysicsConstraint } from "./PhysicsConstraint.js";
-import type { Posed } from "./Posed.js";
-import type { SkeletonClipping } from "./SkeletonClipping.js";
-import type { SkeletonData } from "./SkeletonData.js";
-import type { Skin } from "./Skin.js";
-import { Slot } from "./Slot.js";
-import { Color, type NumberArrayLike, Utils, Vector2 } from "./Utils.js";
+import type { Attachment } from "./attachments/Attachment";
+import { ClippingAttachment } from "./attachments/ClippingAttachment";
+import { MeshAttachment } from "./attachments/MeshAttachment";
+import { RegionAttachment } from "./attachments/RegionAttachment";
+import { Bone } from "./Bone";
+import type { Constraint } from "./Constraint";
+import { DrawOrder } from "./DrawOrder";
+import type { Physics } from "./Physics";
+import { PhysicsConstraint } from "./PhysicsConstraint";
+import type { Posed } from "./Posed";
+import type { SkeletonClipping } from "./SkeletonClipping";
+import type { SkeletonData } from "./SkeletonData";
+import type { Skin } from "./Skin";
+import { Slot } from "./Slot";
+import { Color, type NumberArrayLike, Utils, Vector2 } from "./Utils";
 
 const _quadTriangles = [0, 1, 2, 2, 3, 0];
 

@@ -1,5 +1,5 @@
-import { BlendMode } from "../core/SlotData.js";
-import { Texture, TextureFilter, TextureWrap } from "../core/Texture.js";
+import { BlendMode } from "../core/SlotData";
+import { Texture, TextureFilter, TextureWrap } from "../core/Texture";
 import { Texture as RenderTexture } from "ek3d/textures/Texture";
 import { Blending, Factor, TextureFilter as RenderFilter, Wrapping } from "ek3d/constants";
 

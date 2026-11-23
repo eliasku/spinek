@@ -41,22 +41,22 @@ import {
   TranslateTimeline,
   TranslateXTimeline,
   TranslateYTimeline,
-} from "./Animation.js";
-import type { Attachment, VertexAttachment } from "./attachments/Attachment.js";
-import type { AttachmentLoader } from "./attachments/AttachmentLoader.js";
-import type { MeshAttachment } from "./attachments/MeshAttachment.js";
-import { Sequence, SequenceModeValues } from "./attachments/Sequence.js";
-import { BoneData } from "./BoneData.js";
-import { ScaleYMode } from "./ConstraintData.js";
-import { Event } from "./Event.js";
-import { EventData } from "./EventData.js";
-import { IkConstraintData } from "./IkConstraintData.js";
-import { PathConstraintData, PositionMode, SpacingMode } from "./PathConstraintData.js";
-import { PhysicsConstraintData } from "./PhysicsConstraintData.js";
-import { SkeletonData } from "./SkeletonData.js";
-import { Skin } from "./Skin.js";
-import { SliderData } from "./SliderData.js";
-import { SlotData } from "./SlotData.js";
+} from "./Animation";
+import type { Attachment, VertexAttachment } from "./attachments/Attachment";
+import type { AttachmentLoader } from "./attachments/AttachmentLoader";
+import type { MeshAttachment } from "./attachments/MeshAttachment";
+import { Sequence, SequenceModeValues } from "./attachments/Sequence";
+import { BoneData } from "./BoneData";
+import { ScaleYMode } from "./ConstraintData";
+import { Event } from "./Event";
+import { EventData } from "./EventData";
+import { IkConstraintData } from "./IkConstraintData";
+import { PathConstraintData, PositionMode, SpacingMode } from "./PathConstraintData";
+import { PhysicsConstraintData } from "./PhysicsConstraintData";
+import { SkeletonData } from "./SkeletonData";
+import { Skin } from "./Skin";
+import { SliderData } from "./SliderData";
+import { SlotData } from "./SlotData";
 import {
   type FromProperty,
   FromRotate,
@@ -73,8 +73,8 @@ import {
   ToX,
   ToY,
   TransformConstraintData,
-} from "./TransformConstraintData.js";
-import { Color, type NumberArrayLike, Utils } from "./Utils.js";
+} from "./TransformConstraintData";
+import { Color, type NumberArrayLike, Utils } from "./Utils";
 
 /** Loads skeleton data in the Spine binary format.
  *

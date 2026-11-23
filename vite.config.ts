@@ -18,6 +18,10 @@ export default defineConfig(({ command }) => ({
   },
   lint: {
     ignorePatterns: ["upstream/**", "dist/**", "dist-examples/**", "public/**"],
+    rules: {
+      "no-unused-vars": "off",
+      "unicorn/no-new-array": "off",
+    },
   },
   fmt: {
     ignorePatterns: ["upstream/**", "dist/**", "dist-examples/**", "public/**", "package-lock.json"],

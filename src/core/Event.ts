@@ -1,4 +1,4 @@
-import type { EventData } from "./EventData.js";
+import type { EventData } from "./EventData";
 
 /** Fired by {@link EventTimeline} when specific animation times are reached.
  *

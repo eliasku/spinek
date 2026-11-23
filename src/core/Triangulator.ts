@@ -1,4 +1,4 @@
-import { type NumberArrayLike, Pool } from "./Utils.js";
+import { type NumberArrayLike, Pool } from "./Utils";
 
 export class Triangulator {
   private convexPolygons = [] as Array<number>[];

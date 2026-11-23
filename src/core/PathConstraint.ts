@@ -1,15 +1,15 @@
-import type { Attachment } from "./attachments/Attachment.js";
-import { PathAttachment } from "./attachments/PathAttachment.js";
-import type { Bone } from "./Bone.js";
-import type { BonePose } from "./BonePose.js";
-import { Constraint } from "./Constraint.js";
-import { type PathConstraintData, PositionMode, RotateMode, SpacingMode } from "./PathConstraintData.js";
-import { PathConstraintPose } from "./PathConstraintPose.js";
-import type { Physics } from "./Physics.js";
-import type { Skeleton } from "./Skeleton.js";
-import type { Skin } from "./Skin.js";
-import type { Slot } from "./Slot.js";
-import { MathUtils, Utils } from "./Utils.js";
+import type { Attachment } from "./attachments/Attachment";
+import { PathAttachment } from "./attachments/PathAttachment";
+import type { Bone } from "./Bone";
+import type { BonePose } from "./BonePose";
+import { Constraint } from "./Constraint";
+import { type PathConstraintData, PositionMode, RotateMode, SpacingMode } from "./PathConstraintData";
+import { PathConstraintPose } from "./PathConstraintPose";
+import type { Physics } from "./Physics";
+import type { Skeleton } from "./Skeleton";
+import type { Skin } from "./Skin";
+import type { Slot } from "./Slot";
+import { MathUtils, Utils } from "./Utils";
 
 /** Adjusts the rotation, translation, and scale of the constrained bones so they follow a {@link PathAttachment}.
  *

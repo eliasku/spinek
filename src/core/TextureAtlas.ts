@@ -1,6 +1,6 @@
-import type { AssetManagerBase } from "./AssetManagerBase.js";
-import { type Texture, TextureFilter, TextureRegion, TextureWrap } from "./Texture.js";
-import { type Disposable, type StringMap, Utils } from "./Utils.js";
+import type { AssetManagerBase } from "./AssetManagerBase";
+import { type Texture, TextureFilter, TextureRegion, TextureWrap } from "./Texture";
+import { type Disposable, type StringMap, Utils } from "./Utils";
 
 const textureFilterValues: Record<string, TextureFilter> = {
   Nearest: TextureFilter.Nearest,

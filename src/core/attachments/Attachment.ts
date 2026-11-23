@@ -1,6 +1,6 @@
-import type { Skeleton } from "../Skeleton.js";
-import type { Slot } from "../Slot.js";
-import { type NumberArrayLike, Utils } from "../Utils.js";
+import type { Skeleton } from "../Skeleton";
+import type { Slot } from "../Slot";
+import { type NumberArrayLike, Utils } from "../Utils";
 
 const _empty: number[] = [];
 

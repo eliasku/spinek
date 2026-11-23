@@ -3,20 +3,20 @@ import { Side } from "ek3d/constants";
 import { Vector3 } from "ek3d/math/Vector3";
 import { Quaternion } from "ek3d/math/Quaternion";
 import { Matrix4 } from "ek3d/math/Matrix4";
-import { SkeletonMeshMaterial, type MaterialWithMap, type MaterialParameters, MeshBatcher } from "./MeshBatcher.js";
-import { AnimationState } from "../core/AnimationState.js";
-import { AnimationStateData } from "../core/AnimationStateData.js";
-import { ClippingAttachment } from "../core/attachments/ClippingAttachment.js";
-import { Color, NumberArrayLike, Utils, Vector2 } from "../core/Utils.js";
-import { MeshAttachment } from "../core/attachments/MeshAttachment.js";
-import { Physics } from "../core/Physics.js";
-import { RegionAttachment } from "../core/attachments/RegionAttachment.js";
-import { Skeleton } from "../core/Skeleton.js";
-import { SkeletonClipping } from "../core/SkeletonClipping.js";
-import { SkeletonData } from "../core/SkeletonData.js";
-import { SkeletonPhysicsMovement, type SkeletonPhysicsMovementTransform } from "../core/SkeletonPhysicsMovement.js";
+import { SkeletonMeshMaterial, type MaterialWithMap, type MaterialParameters, MeshBatcher } from "./MeshBatcher";
+import { AnimationState } from "../core/AnimationState";
+import { AnimationStateData } from "../core/AnimationStateData";
+import { ClippingAttachment } from "../core/attachments/ClippingAttachment";
+import { Color, NumberArrayLike, Utils, Vector2 } from "../core/Utils";
+import { MeshAttachment } from "../core/attachments/MeshAttachment";
+import { Physics } from "../core/Physics";
+import { RegionAttachment } from "../core/attachments/RegionAttachment";
+import { Skeleton } from "../core/Skeleton";
+import { SkeletonClipping } from "../core/SkeletonClipping";
+import { SkeletonData } from "../core/SkeletonData";
+import { SkeletonPhysicsMovement, type SkeletonPhysicsMovementTransform } from "../core/SkeletonPhysicsMovement";
 
-import { Ek3dTexture } from "./Ek3dTexture.js";
+import { Ek3dTexture } from "./Ek3dTexture";
 
 export type SkeletonMeshConfiguration = {
   /** The skeleton data object loaded by using {@link SkeletonJson} or {@link SkeletonBinary} */
@@ -154,6 +154,7 @@ export class SkeletonMesh extends Object3D {
     // a rotated object below a non-uniformly scaled parent has a sheared world matrix,
     // which cannot be decomposed into a reliable world quaternion.
     this.physicsWorldQuaternion.identity();
+    // oxlint-disable-next-line typescript/no-this-alias
     for (let object: Object3D | null = this; object; object = object.parent) {
       if (object.matrixAutoUpdate) {
         this.physicsWorldQuaternion.premultiply(object.quaternion);

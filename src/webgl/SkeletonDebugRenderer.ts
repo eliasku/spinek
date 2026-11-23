@@ -1,12 +1,12 @@
-import { ClippingAttachment } from "../core/attachments/ClippingAttachment.js";
-import { Color, type Disposable, Utils } from "../core/Utils.js";
-import { MeshAttachment } from "../core/attachments/MeshAttachment.js";
-import { PathAttachment } from "../core/attachments/PathAttachment.js";
-import { RegionAttachment } from "../core/attachments/RegionAttachment.js";
-import { type Skeleton } from "../core/Skeleton.js";
-import { SkeletonBounds } from "../core/SkeletonBounds.js";
-import type { ShapeRenderer } from "./ShapeRenderer.js";
-import { ManagedWebGLRenderingContext } from "./WebGL.js";
+import { ClippingAttachment } from "../core/attachments/ClippingAttachment";
+import { Color, type Disposable, Utils } from "../core/Utils";
+import { MeshAttachment } from "../core/attachments/MeshAttachment";
+import { PathAttachment } from "../core/attachments/PathAttachment";
+import { RegionAttachment } from "../core/attachments/RegionAttachment";
+import { type Skeleton } from "../core/Skeleton";
+import { SkeletonBounds } from "../core/SkeletonBounds";
+import type { ShapeRenderer } from "./ShapeRenderer";
+import { ManagedWebGLRenderingContext } from "./WebGL";
 
 const _lightGray = new Color(192 / 255, 192 / 255, 192 / 255, 1);
 

@@ -1,5 +1,5 @@
-import type { Pose } from "./Pose.js";
-import type { PosedData } from "./PosedData.js";
+import type { Pose } from "./Pose";
+import type { PosedData } from "./PosedData";
 
 /** The base class for an object with a number of poses:
  * - {@link data}: The setup pose.

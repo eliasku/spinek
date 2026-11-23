@@ -1,8 +1,8 @@
-import type { BoneData } from "./BoneData.js";
-import { ConstraintData, ScaleYMode } from "./ConstraintData.js";
-import { IkConstraint } from "./IkConstraint.js";
-import { IkConstraintPose } from "./IkConstraintPose.js";
-import type { Skeleton } from "./Skeleton.js";
+import type { BoneData } from "./BoneData";
+import { ConstraintData, ScaleYMode } from "./ConstraintData";
+import { IkConstraint } from "./IkConstraint";
+import { IkConstraintPose } from "./IkConstraintPose";
+import type { Skeleton } from "./Skeleton";
 
 /** Stores the setup pose for an {@link IkConstraint}.
  *

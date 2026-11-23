@@ -1,21 +1,21 @@
 // oxlint-disable unicorn/no-new-array
-import type { Attachment, VertexAttachment } from "./attachments/Attachment.js";
-import type { HasSequence } from "./attachments/HasSequence.js";
-import { SequenceMode, SequenceModeValues } from "./attachments/Sequence.js";
-import type { Inherit } from "./BoneData.js";
-import type { BonePose } from "./BonePose.js";
-import type { Event } from "./Event.js";
-import type { IkConstraint } from "./IkConstraint.js";
-import type { PathConstraint } from "./PathConstraint.js";
-import type { PhysicsConstraint } from "./PhysicsConstraint.js";
-import type { PhysicsConstraintData } from "./PhysicsConstraintData.js";
-import type { PhysicsConstraintPose } from "./PhysicsConstraintPose.js";
-import type { Skeleton } from "./Skeleton.js";
-import type { Slider } from "./Slider.js";
-import type { Slot } from "./Slot.js";
-import type { SlotPose } from "./SlotPose.js";
-import type { TransformConstraint } from "./TransformConstraint.js";
-import { Color, type NumberArrayLike, StringSet, Utils } from "./Utils.js";
+import type { Attachment, VertexAttachment } from "./attachments/Attachment";
+import type { HasSequence } from "./attachments/HasSequence";
+import { SequenceMode, SequenceModeValues } from "./attachments/Sequence";
+import type { Inherit } from "./BoneData";
+import type { BonePose } from "./BonePose";
+import type { Event } from "./Event";
+import type { IkConstraint } from "./IkConstraint";
+import type { PathConstraint } from "./PathConstraint";
+import type { PhysicsConstraint } from "./PhysicsConstraint";
+import type { PhysicsConstraintData } from "./PhysicsConstraintData";
+import type { PhysicsConstraintPose } from "./PhysicsConstraintPose";
+import type { Skeleton } from "./Skeleton";
+import type { Slider } from "./Slider";
+import type { Slot } from "./Slot";
+import type { SlotPose } from "./SlotPose";
+import type { TransformConstraint } from "./TransformConstraint";
+import { Color, type NumberArrayLike, StringSet, Utils } from "./Utils";
 
 /** Stores a list of timelines to animate a skeleton's pose over time.
  *

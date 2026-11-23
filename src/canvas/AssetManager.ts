@@ -1,5 +1,5 @@
-import { AssetManagerBase, Downloader } from "../core/AssetManagerBase.js";
-import { CanvasTexture } from "./CanvasTexture.js";
+import { AssetManagerBase, Downloader } from "../core/AssetManagerBase";
+import { CanvasTexture } from "./CanvasTexture";
 
 export class AssetManager extends AssetManagerBase {
   constructor(pathPrefix: string = "", downloader: Downloader = new Downloader()) {

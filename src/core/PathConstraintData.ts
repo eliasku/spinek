@@ -1,9 +1,9 @@
-import type { BoneData } from "./BoneData.js";
-import { ConstraintData } from "./ConstraintData.js";
-import { PathConstraint } from "./PathConstraint.js";
-import { PathConstraintPose } from "./PathConstraintPose.js";
-import type { Skeleton } from "./Skeleton.js";
-import type { SlotData } from "./SlotData.js";
+import type { BoneData } from "./BoneData";
+import { ConstraintData } from "./ConstraintData";
+import { PathConstraint } from "./PathConstraint";
+import { PathConstraintPose } from "./PathConstraintPose";
+import type { Skeleton } from "./Skeleton";
+import type { SlotData } from "./SlotData";
 
 /** Stores the setup pose for a {@link PathConstraint}.
  *

@@ -1,8 +1,8 @@
-import type { BoneData } from "./BoneData.js";
-import { ConstraintData, ScaleYMode } from "./ConstraintData.js";
-import { PhysicsConstraint } from "./PhysicsConstraint.js";
-import { PhysicsConstraintPose } from "./PhysicsConstraintPose.js";
-import type { Skeleton } from "./Skeleton.js";
+import type { BoneData } from "./BoneData";
+import { ConstraintData, ScaleYMode } from "./ConstraintData";
+import { PhysicsConstraint } from "./PhysicsConstraint";
+import { PhysicsConstraintPose } from "./PhysicsConstraintPose";
+import type { Skeleton } from "./Skeleton";
 
 /** Stores the setup pose for a {@link PhysicsConstraint}.
  *

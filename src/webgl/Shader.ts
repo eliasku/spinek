@@ -1,5 +1,5 @@
-import { type Disposable, type Restorable } from "../core/Utils.js";
-import { ManagedWebGLRenderingContext } from "./WebGL.js";
+import { type Disposable, type Restorable } from "../core/Utils";
+import { ManagedWebGLRenderingContext } from "./WebGL";
 
 export class Shader implements Disposable, Restorable {
   public static MVP_MATRIX = "u_projTrans";

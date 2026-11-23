@@ -1,4 +1,4 @@
-import type { Pose } from "./Pose.js";
+import type { Pose } from "./Pose";
 
 /** Stores a pose for an IK constraint. */
 export class IkConstraintPose implements Pose<IkConstraintPose> {

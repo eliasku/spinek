@@ -1,4 +1,4 @@
-import { Vector3 } from "./Vector3.js";
+import { Vector3 } from "./Vector3";
 
 export const M00 = 0;
 export const M01 = 4;

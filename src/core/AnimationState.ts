@@ -7,11 +7,11 @@ import {
   MixFrom,
   RotateTimeline,
   Timeline,
-} from "./Animation.js";
-import type { AnimationStateData } from "./AnimationStateData.js";
-import type { Event } from "./Event.js";
-import type { Skeleton } from "./Skeleton.js";
-import { Interpolation, MathUtils, Pool, Utils } from "./Utils.js";
+} from "./Animation";
+import type { AnimationStateData } from "./AnimationStateData";
+import type { Event } from "./Event";
+import type { Skeleton } from "./Skeleton";
+import { Interpolation, MathUtils, Pool, Utils } from "./Utils";
 
 /** Applies animations over time, queues animations for later playback, mixes (crossfading) between animations, and applies
  * multiple animations on top of each other (layering).

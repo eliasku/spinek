@@ -1,6 +1,6 @@
-import { BoundingBoxAttachment } from "./attachments/BoundingBoxAttachment.js";
-import type { Skeleton } from "./Skeleton.js";
-import { type NumberArrayLike, Pool, Utils } from "./Utils.js";
+import { BoundingBoxAttachment } from "./attachments/BoundingBoxAttachment";
+import type { Skeleton } from "./Skeleton";
+import { type NumberArrayLike, Pool, Utils } from "./Utils";
 
 /** Collects each visible {@link BoundingBoxAttachment} and computes the world vertices for its polygon. The polygon vertices are
  * provided along with convenience methods for doing hit detection. */

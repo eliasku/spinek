@@ -1,5 +1,5 @@
-import type { Slot } from "./Slot.js";
-import { Utils } from "./Utils.js";
+import type { Slot } from "./Slot";
+import { Utils } from "./Utils";
 
 /** Stores the skeleton's draw order, which is the order that each slot's attachment is rendered. */
 export class DrawOrder {

@@ -1,8 +1,8 @@
-import { type StringMap, TimeKeeper } from "../core/Utils.js";
-import { AssetManager } from "./AssetManager.js";
-import { Input } from "./Input.js";
-import { SceneRenderer } from "./SceneRenderer.js";
-import { ManagedWebGLRenderingContext } from "./WebGL.js";
+import { type StringMap, TimeKeeper } from "../core/Utils";
+import { AssetManager } from "./AssetManager";
+import { Input } from "./Input";
+import { SceneRenderer } from "./SceneRenderer";
+import { ManagedWebGLRenderingContext } from "./WebGL";
 
 /** An app running inside a {@link SpineCanvas}. The app life-cycle
  * is as follows:

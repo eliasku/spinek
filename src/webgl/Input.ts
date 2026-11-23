@@ -1,4 +1,4 @@
-import type { Disposable } from "../core/Utils.js";
+import type { Disposable } from "../core/Utils";
 export class Input implements Disposable {
   element: HTMLElement;
   mouseX = 0;

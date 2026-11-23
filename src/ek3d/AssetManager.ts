@@ -1,5 +1,5 @@
-import { AssetManagerBase, Downloader } from "../core/AssetManagerBase.js";
-import { Ek3dTexture } from "./Ek3dTexture.js";
+import { AssetManagerBase, Downloader } from "../core/AssetManagerBase";
+import { Ek3dTexture } from "./Ek3dTexture";
 
 export class AssetManager extends AssetManagerBase {
   constructor(pathPrefix = "", downloader = new Downloader()) {

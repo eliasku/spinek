@@ -1,3 +1,4 @@
+// oxlint-disable typescript/no-duplicate-enum-values
 export abstract class Texture {
   protected _image: HTMLImageElement | ImageBitmap | any;
 

@@ -1,6 +1,6 @@
-import { type Disposable, type Restorable } from "../core/Utils.js";
-import { Texture, TextureFilter, type TextureWrap } from "../core/Texture.js";
-import { ManagedWebGLRenderingContext } from "./WebGL.js";
+import { type Disposable, type Restorable } from "../core/Utils";
+import { Texture, TextureFilter, type TextureWrap } from "../core/Texture";
+import { ManagedWebGLRenderingContext } from "./WebGL";
 
 export class GLTexture extends Texture implements Disposable, Restorable {
   context: ManagedWebGLRenderingContext;

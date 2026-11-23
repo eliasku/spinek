@@ -1,11 +1,11 @@
-import type { Skin } from "../Skin.js";
-import type { BoundingBoxAttachment } from "./BoundingBoxAttachment.js";
-import type { ClippingAttachment } from "./ClippingAttachment.js";
-import type { MeshAttachment } from "./MeshAttachment.js";
-import type { PathAttachment } from "./PathAttachment.js";
-import type { PointAttachment } from "./PointAttachment.js";
-import type { RegionAttachment } from "./RegionAttachment.js";
-import type { Sequence } from "./Sequence.js";
+import type { Skin } from "../Skin";
+import type { BoundingBoxAttachment } from "./BoundingBoxAttachment";
+import type { ClippingAttachment } from "./ClippingAttachment";
+import type { MeshAttachment } from "./MeshAttachment";
+import type { PathAttachment } from "./PathAttachment";
+import type { PointAttachment } from "./PointAttachment";
+import type { RegionAttachment } from "./RegionAttachment";
+import type { Sequence } from "./Sequence";
 
 /** The interface which can be implemented to customize creating and populating attachments.
  *

@@ -1,10 +1,10 @@
-import type { BoneData } from "./BoneData.js";
-import type { BonePose } from "./BonePose.js";
-import { ConstraintData } from "./ConstraintData.js";
-import type { Skeleton } from "./Skeleton.js";
-import { TransformConstraint } from "./TransformConstraint.js";
-import { TransformConstraintPose } from "./TransformConstraintPose.js";
-import { MathUtils } from "./Utils.js";
+import type { BoneData } from "./BoneData";
+import type { BonePose } from "./BonePose";
+import { ConstraintData } from "./ConstraintData";
+import type { Skeleton } from "./Skeleton";
+import { TransformConstraint } from "./TransformConstraint";
+import { TransformConstraintPose } from "./TransformConstraintPose";
+import { MathUtils } from "./Utils";
 
 /** Stores the setup pose for a {@link TransformConstraint}.
  *

@@ -1,10 +1,10 @@
-import { ClippingAttachment } from "./attachments/ClippingAttachment.js";
-import { MeshAttachment } from "./attachments/MeshAttachment.js";
-import { RegionAttachment } from "./attachments/RegionAttachment.js";
-import type { Skeleton } from "./Skeleton.js";
-import { SkeletonClipping } from "./SkeletonClipping.js";
-import { BlendMode } from "./SlotData.js";
-import type { Color, NumberArrayLike } from "./Utils.js";
+import { ClippingAttachment } from "./attachments/ClippingAttachment";
+import { MeshAttachment } from "./attachments/MeshAttachment";
+import { RegionAttachment } from "./attachments/RegionAttachment";
+import type { Skeleton } from "./Skeleton";
+import { SkeletonClipping } from "./SkeletonClipping";
+import { BlendMode } from "./SlotData";
+import type { Color, NumberArrayLike } from "./Utils";
 
 export class SkeletonRendererCore {
   private commandPool = new CommandPool();

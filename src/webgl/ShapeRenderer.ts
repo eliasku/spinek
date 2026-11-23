@@ -1,7 +1,7 @@
-import { Color, type Disposable, MathUtils, Vector2 } from "../core/Utils.js";
-import { ColorAttribute, Mesh, Position2Attribute } from "./Mesh.js";
-import type { Shader } from "./Shader.js";
-import { ManagedWebGLRenderingContext } from "./WebGL.js";
+import { Color, type Disposable, MathUtils, Vector2 } from "../core/Utils";
+import { ColorAttribute, Mesh, Position2Attribute } from "./Mesh";
+import type { Shader } from "./Shader";
+import { ManagedWebGLRenderingContext } from "./WebGL";
 
 export class ShapeRenderer implements Disposable {
   private context: ManagedWebGLRenderingContext;

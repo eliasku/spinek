@@ -1,4 +1,4 @@
-import { type Disposable, type Restorable } from "../core/Utils.js";
+import { type Disposable, type Restorable } from "../core/Utils";
 
 export class ManagedWebGLRenderingContext implements Disposable, Restorable {
   public canvas: HTMLCanvasElement | OffscreenCanvas;

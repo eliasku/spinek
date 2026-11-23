@@ -1,9 +1,9 @@
-import { type BlendMode } from "../core/SlotData.js";
-import { type Disposable } from "../core/Utils.js";
-import type { GLTexture } from "./GLTexture.js";
-import { Color2Attribute, ColorAttribute, Mesh, Position2Attribute, TexCoordAttribute } from "./Mesh.js";
-import type { Shader } from "./Shader.js";
-import { ManagedWebGLRenderingContext } from "./WebGL.js";
+import { type BlendMode } from "../core/SlotData";
+import { type Disposable } from "../core/Utils";
+import type { GLTexture } from "./GLTexture";
+import { Color2Attribute, ColorAttribute, Mesh, Position2Attribute, TexCoordAttribute } from "./Mesh";
+import type { Shader } from "./Shader";
+import { ManagedWebGLRenderingContext } from "./WebGL";
 
 const GL_ONE = 1;
 const GL_ONE_MINUS_SRC_COLOR = 0x0301;

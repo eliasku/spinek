@@ -1,13 +1,13 @@
-import type { Bone } from "./Bone.js";
-import { Inherit } from "./BoneData.js";
-import type { BonePose } from "./BonePose.js";
-import { Constraint } from "./Constraint.js";
-import { ScaleYMode } from "./ConstraintData.js";
-import type { IkConstraintData } from "./IkConstraintData.js";
-import { IkConstraintPose } from "./IkConstraintPose.js";
-import type { Physics } from "./Physics.js";
-import type { Skeleton } from "./Skeleton.js";
-import { MathUtils } from "./Utils.js";
+import type { Bone } from "./Bone";
+import { Inherit } from "./BoneData";
+import type { BonePose } from "./BonePose";
+import { Constraint } from "./Constraint";
+import { ScaleYMode } from "./ConstraintData";
+import type { IkConstraintData } from "./IkConstraintData";
+import { IkConstraintPose } from "./IkConstraintPose";
+import type { Physics } from "./Physics";
+import type { Skeleton } from "./Skeleton";
+import { MathUtils } from "./Utils";
 
 /** Adjusts the local rotation of 1 or 2 constrained bones so the world position of the tip of the last bone is as close to the
  * target bone as possible.

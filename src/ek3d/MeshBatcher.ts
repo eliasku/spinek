@@ -1,4 +1,4 @@
-import { BlendMode } from "../core/SlotData.js";
+import { BlendMode } from "../core/SlotData";
 import { Mesh } from "ek3d/objects/Mesh";
 import { BufferGeometry } from "ek3d/core/BufferGeometry";
 import { BufferAttribute } from "ek3d/core/BufferAttribute";
@@ -12,8 +12,8 @@ import colorVertex from "ek3d/renderers/shaders/ShaderChunk/color_vertex.glsl";
 import colorFragment from "ek3d/renderers/shaders/ShaderChunk/color_fragment.glsl";
 import premultipliedAlphaFragment from "ek3d/renderers/shaders/ShaderChunk/premultiplied_alpha_fragment.glsl";
 import colorspaceFragment from "ek3d/renderers/shaders/ShaderChunk/colorspace_fragment.glsl";
-import { SkeletonMesh } from "./SkeletonMesh.js";
-import { Ek3dTexture, type BlendOptions } from "./Ek3dTexture.js";
+import { SkeletonMesh } from "./SkeletonMesh";
+import { Ek3dTexture, type BlendOptions } from "./Ek3dTexture";
 
 export type MaterialWithMap = Material & { map: EkTexture | null };
 export type MaterialParameters = Pick<

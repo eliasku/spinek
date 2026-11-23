@@ -1,4 +1,4 @@
-import type { Skeleton } from "./Skeleton.js";
+import type { Skeleton } from "./Skeleton";
 
 export interface StringMap<T> {
   [key: string]: T;

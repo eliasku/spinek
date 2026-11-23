@@ -1,5 +1,5 @@
-import type { Physics } from "./Physics.js";
-import type { Skeleton } from "./Skeleton.js";
+import type { Physics } from "./Physics";
+import type { Skeleton } from "./Skeleton";
 
 /** The interface for items updated by {@link Skeleton.updateWorldTransform}. */
 export interface Update {

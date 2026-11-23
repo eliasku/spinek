@@ -1,10 +1,10 @@
-import type { Animation } from "./Animation.js";
-import type { BoneData } from "./BoneData.js";
-import { ConstraintData } from "./ConstraintData.js";
-import type { Skeleton } from "./Skeleton.js";
-import { Slider } from "./Slider.js";
-import { SliderPose } from "./SliderPose.js";
-import type { FromProperty } from "./TransformConstraintData.js";
+import type { Animation } from "./Animation";
+import type { BoneData } from "./BoneData";
+import { ConstraintData } from "./ConstraintData";
+import type { Skeleton } from "./Skeleton";
+import { Slider } from "./Slider";
+import { SliderPose } from "./SliderPose";
+import type { FromProperty } from "./TransformConstraintData";
 
 /** Stores the setup pose for a {@link Slider}.
  *

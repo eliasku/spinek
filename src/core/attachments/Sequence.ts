@@ -1,9 +1,9 @@
-import type { SlotPose } from "../SlotPose.js";
-import type { TextureRegion } from "../Texture.js";
-import { type NumberArrayLike, Utils } from "../Utils.js";
-import type { HasSequence } from "./HasSequence.js";
-import { MeshAttachment } from "./MeshAttachment.js";
-import { RegionAttachment } from "./RegionAttachment.js";
+import type { SlotPose } from "../SlotPose";
+import type { TextureRegion } from "../Texture";
+import { type NumberArrayLike, Utils } from "../Utils";
+import type { HasSequence } from "./HasSequence";
+import { MeshAttachment } from "./MeshAttachment";
+import { RegionAttachment } from "./RegionAttachment";
 
 let _nextID = 0;
 
