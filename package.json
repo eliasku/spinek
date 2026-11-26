@@ -27,8 +27,8 @@
     "lint": "vp lint",
     "format": "vp fmt",
     "format:check": "vp fmt --check",
-    "check": "npm run lint && npm run typecheck",
-    "verify": "npm run check && npm test && npm run build",
+    "check": "pnpm run lint && pnpm run typecheck",
+    "verify": "pnpm run check && pnpm test && pnpm run build",
     "release": "tsx tools/release.ts"
   },
   "devDependencies": {
@@ -48,11 +48,8 @@
       "optional": true
     }
   },
-  "overrides": {
-    "vite": "npm:@voidzero-dev/vite-plus-core@8.3.8000"
-  },
   "engines": {
     "node": "^22.22.2 || ^24.15.0 || >=26.0.0"
   },
-  "packageManager": "npm@12.2.2"
+  "packageManager": "pnpm@12.23.0"
 }

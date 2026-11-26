@@ -24,6 +24,6 @@ export default defineConfig(({ command }) => ({
     },
   },
   fmt: {
-    ignorePatterns: ["upstream/**", "dist/**", "dist-examples/**", "public/**", "package-lock.json"],
+    ignorePatterns: ["upstream/**", "dist/**", "dist-examples/**", "public/**", "pnpm-lock.yaml"],
   },
 }));

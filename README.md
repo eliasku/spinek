@@ -5,14 +5,14 @@ TypeScript port of the **Spine 4.3** runtime, with a standalone core, WebGL and 
 ## Installation
 
 ```sh
-npm install spinek
+pnpm add spinek
 ```
 
 spinek ships TypeScript source. Use a bundler that processes TypeScript dependencies.
 The core, WebGL and Canvas 2D modules do not need ek3d. For `spinek/ek3d/*`, install both packages:
 
 ```sh
-npm install spinek ek3d
+pnpm add spinek ek3d
 ```
 
 ## Usage
@@ -42,34 +42,34 @@ See the complete examples for asset loading, animation updates, rendering and re
 
 ## Run the examples
 
-Requires Node.js `^22.22.2 || ^24.15.0 || >=26.0.0` and npm 12.2.2. Vite+ is pinned to 1.7.0. In the repository directory:
+Requires Node.js `^22.22.2 || ^24.15.0 || >=26.0.0` and pnpm 12.23.0. Vite+ is pinned to 1.7.0. In the repository directory:
 
 ```sh
-npm ci
-npm run dev
+pnpm install --frozen-lockfile
+pnpm run dev
 ```
 
 Open the local URL printed by the dev server. The landing page links to all three examples, with animation selection and pause/resume controls.
 
 ```sh
-npm run build    # Build the static example site into dist/
-npm run preview  # Serve the built site
-npm run check    # Lint and type checking
-npm run verify   # Checks, tests and example site build
+pnpm run build    # Build the static example site into dist/
+pnpm run preview  # Serve the built site
+pnpm run check    # Lint and type checking
+pnpm run verify   # Checks, tests and example site build
 ```
 
 The npm package does not include the examples or their assets; use the repository to run them.
 
-Formatting remains a separate `npm run format:check` command; the existing source formatting baseline is not clean.
+Formatting remains a separate `pnpm run format:check` command; the existing source formatting baseline is not clean.
 
-TypeScript configurations live in `tools/`: `tsconfig.base.json` provides shared options; `tsconfig.test.json`, `tsconfig.node.json`, and `tsconfig.lib.json` cover Vitest tests, Node.js scripts/configs, and browser library sources/examples. The root `tsconfig.json` only lists project references. `npm run typecheck` runs `tsc -b`, with build metadata stored in `node_modules/.cache/`.
+TypeScript configurations live in `tools/`: `tsconfig.base.json` provides shared options; `tsconfig.test.json`, `tsconfig.node.json`, and `tsconfig.lib.json` cover Vitest tests, Node.js scripts/configs, and browser library sources/examples. The root `tsconfig.json` only lists project references. `pnpm run typecheck` runs `tsc -b`, with build metadata stored in `node_modules/.cache/`.
 
 Vite explicitly uses `tools/tsconfig.lib.json`. Its `ES2025.Float16` types support ek3d's optional `Float16Array` usage without exposing Node.js globals to browser code; the compilation target remains ES2022.
 
 ## Releases
 
-Push the release notes on the default branch and run `npm run release` from a clean checkout.
-It pushes the annotated `v<version>` tag, then updates the changelog and both npm manifests in a local `next version` patch commit. Push that commit separately.
+Push the release notes on the default branch and run `pnpm run release` from a clean checkout.
+It pushes the annotated `v<version>` tag, then updates `package.json` and `CHANGELOG.md` in a local `next version` patch commit. Push that commit separately.
 
 Before the first tag, create the GitHub environment `npm` and allow only deployment tags matching `v*`. Restrict who can create or move release tags.
 In [npm Trusted Publishing](https://docs.npmjs.com/trusted-publishers/), authorize `eliasku/spinek`, workflow file `publish.yml`, environment `npm`, with direct `npm publish` allowed. No npm write token is needed.

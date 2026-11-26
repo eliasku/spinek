@@ -2,6 +2,8 @@
 
 ## 0.1.2
 
+- Use pnpm for development and trusted publishing.
+
 ## 0.1.1
 
 - Declare ek3d as an optional peer for the renderer adapter.
